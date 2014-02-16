@@ -2,7 +2,7 @@
 #define WORLD_HPP
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "entity.hpp"
+#include "player.hpp"
 
 class world {
 public:
