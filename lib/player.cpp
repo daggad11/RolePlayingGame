@@ -1,6 +1,19 @@
 #include "player.hpp"
 
-player::player(double xpos, double ypos, double mass, double width, double height) : entity(xpos, ypos, mass, width, height) {
+player::player() {
+	//todo
+}
+
+void player::init(double xpos, double ypos, double mass, double width, double height) {
+	this->xpos = xpos;
+	this->ypos = ypos;
+	this->xvel = 1;
+	this->yvel = 0;
+	this->mass = mass;
+	this->width = width;
+	this->height = height;
+	this->rotdir = 0;
+
 	head.setRadius(height/6);
 	torso.setSize(sf::Vector2f(4*width/5, height/3));
 	rightArm.setSize(sf::Vector2f(width/2, height/3));
@@ -50,4 +63,30 @@ void player::draw(sf::RenderWindow &window) {
 	leftArm.setSize(leftArm.getSize()/conv);
 	rightLeg.setSize(rightLeg.getSize()/conv);
 	leftLeg.setSize(leftLeg.getSize()/conv);
+}
+
+void player::animate() {
+	if (xvel > 0) {
+		//limb animations
+		if (rotdir == 0) {
+			rightArm.setRotation(rightArm.getRotation()+1);
+			leftArm.setRotation(leftArm.getRotation()-1);
+			rightLeg.setRotation(rightLeg.getRotation()+1);
+			leftLeg.setRotation(leftLeg.getRotation()-1);
+			if (abs(rightArm.getRotation() - 60) <= 1)
+				rotdir = 1;
+		}
+		else if (rotdir == 1) {
+			rightArm.setRotation(rightArm.getRotation()-1);
+			leftArm.setRotation(leftArm.getRotation()+1);
+			rightLeg.setRotation(rightLeg.getRotation()-1);
+			leftLeg.setRotation(leftLeg.getRotation()+1);
+			if (abs(leftArm.getRotation()-60) <= 1)
+				rotdir = 0;
+		} //end arm animations
+	}
+}
+
+void player::update() {
+	animate();
 }

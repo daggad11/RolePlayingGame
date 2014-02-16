@@ -1,10 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include "world.hpp"
-#include "player.hpp"
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(1600, 900), "RPG");
-	player player1(1, 1, 10, 0.5, 1.8);
+	world world;
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -13,7 +12,8 @@ int main() {
 				window.close();
 		}
 		window.clear(sf::Color::Black);
-		player1.draw(window);
+		world.update();
+		world.draw(window);
 		window.display();
 	}
 	return 0;

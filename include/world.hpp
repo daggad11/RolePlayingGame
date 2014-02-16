@@ -6,9 +6,12 @@
 
 class world {
 public:
+	world();
 	void draw(sf::RenderWindow &window);
+	void update();
 private:
 	std::vector<entity> entities;
+	player player;
 };
 
 #endif
