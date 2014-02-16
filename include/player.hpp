@@ -10,12 +10,10 @@ private:
 	//body parts
 	sf::CircleShape head;
 	sf::RectangleShape torso;
-	sf::RectangleShape head;
 	sf::RectangleShape rightArm;
 	sf::RectangleShape leftArm;
 	sf::RectangleShape rightLeg;
 	sf::RectangleShape leftLeg;
-
 };
 
 #endif
