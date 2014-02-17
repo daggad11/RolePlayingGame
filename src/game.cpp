@@ -4,7 +4,7 @@
 int main() {
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "RPG");
 	sf::Clock clock;
-	world world(window.getSize().x/30);
+	world world1(window.getSize().x/30);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -12,12 +12,12 @@ int main() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 			else
-				world.handleEvent(event);
+				world1.handleEvent(event);
 		}
 		window.clear(sf::Color::Black);
-		world.update(clock.getElapsedTime().asSeconds());
+		world1.update(clock.getElapsedTime().asSeconds());
 		clock.restart();
-		world.draw(window);
+		world1.draw(window);
 		window.display();
 	}
 	return 0;

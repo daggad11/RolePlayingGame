@@ -14,7 +14,7 @@ public:
 private:
 	std::vector<entity> entities;
 	std::vector<chunk> chunks;
-	player player;
+	player player1;
 };
 
 #endif
