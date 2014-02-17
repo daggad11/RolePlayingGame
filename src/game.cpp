@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed || event.key.code == sf::Keyboard::Escape)
 				window.close();
 			else
 				world1.handleEvent(event);
