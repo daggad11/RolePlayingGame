@@ -6,9 +6,9 @@
 
 class world {
 public:
-	world();
+	world(float conv);
 	void draw(sf::RenderWindow &window);
-	void update();
+	void update(double time);
 private:
 	std::vector<entity> entities;
 	player player;

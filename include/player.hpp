@@ -6,11 +6,11 @@
 class player : public entity  {
 public:
 	player();
-	void init(double xpos, double ypos, double mass, double width, double height);
+	void init(double xpos, double ypos, double mass, double width, double height, float conv);
 	void draw(sf::RenderWindow &window);
-	void animate();
-	void update();
-private:
+	void animate(double time);
+	void update(double time);
+protected:
 	//body parts
 	sf::CircleShape head;
 	sf::RectangleShape torso;
@@ -19,8 +19,12 @@ private:
 	sf::RectangleShape rightLeg;
 	sf::RectangleShape leftLeg;
 
-	//animation bools
+	//animation variables
+	double rotlimit;
+	double rotconversion;
 	bool rotdir;
+
+	float conversion; //conversion rate from pixels to game units
 };
 
 #endif

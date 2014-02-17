@@ -3,7 +3,8 @@
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(1600, 900), "RPG");
-	world world;
+	sf::Clock clock;
+	world world(window.getSize().x/20);
 
 	while (window.isOpen()) {
 		sf::Event event;
@@ -12,7 +13,8 @@ int main() {
 				window.close();
 		}
 		window.clear(sf::Color::Black);
-		world.update();
+		world.update(clock.getElapsedTime().asSeconds());
+		clock.restart();
 		world.draw(window);
 		window.display();
 	}
