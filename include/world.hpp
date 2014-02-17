@@ -9,6 +9,7 @@ public:
 	world(float conv);
 	void draw(sf::RenderWindow &window);
 	void update(double time);
+	void handleEvent(sf::Event &event);
 private:
 	std::vector<entity> entities;
 	player player;

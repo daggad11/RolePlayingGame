@@ -11,3 +11,20 @@ void world::draw(sf::RenderWindow &window) {
 void world::update(double time) {
 	player.update(time);
 }
+
+void world::handleEvent(sf::Event &event) {
+	if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+		if (event.key.code == sf::Keyboard::D) {
+			player.handleEvent(event);
+		}
+		if (event.key.code == sf::Keyboard::A) {
+			player.handleEvent(event);
+		}
+		if (event.key.code == sf::Keyboard::W) {
+			player.handleEvent(event);
+		}
+		if (event.key.code == sf::Keyboard::S) {
+			player.handleEvent(event);
+		}
+	}
+}

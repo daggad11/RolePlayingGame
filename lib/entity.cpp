@@ -9,6 +9,10 @@ entity::entity(double xpos, double ypos, double mass, double width, double heigh
 	this->ypos = ypos;
 	this->xvel = 0;
 	this->yvel = 0;
+	this->accelright = false;
+	this->accelleft = false;
+	this->accelup = false;
+	this->acceldown = false;
 	this->mass = mass;
 	this->width = width;
 	this->height = height;

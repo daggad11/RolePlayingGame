@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include <iostream>
 
 player::player() {
 	//todo
@@ -7,11 +8,20 @@ player::player() {
 void player::init(double xpos, double ypos, double mass, double width, double height, float conv) {
 	this->xpos = xpos;
 	this->ypos = ypos;
-	this->xvel = 1;
+
+	this->speed = 3;
+	
+	this->xvel = 0;
 	this->yvel = 0;
+	this->accelright = false;
+	this->accelleft = false;
+	this->accelup = false;
+	this->acceldown = false;
+
 	this->mass = mass;
 	this->width = width;
 	this->height = height;
+	
 	this->conversion = conv;
 	this->rotdir = 0;
 	this->rotconversion = 200;
@@ -60,27 +70,115 @@ void player::draw(sf::RenderWindow &window) {
 }
 
 void player::animate(double time) {
-	if (xvel > 0) {
-		//limb animations
+	if (xvel > 0.5) {
 		if (rotdir == 0) {
-			rightArm.setRotation(rightArm.getRotation()+xvel*time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()-xvel*time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()+xvel*time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()-xvel*time*rotconversion);
+			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
+			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
+			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
+			leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
 			if (abs(rightArm.getRotation() - rotlimit) <= 1)
 				rotdir = 1;
 		}
 		else if (rotdir == 1) {
-			rightArm.setRotation(rightArm.getRotation()-xvel*time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()+xvel*time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()-xvel*time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()+xvel*time*rotconversion);
+			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
+			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
+			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
+			leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
 			if (abs(leftArm.getRotation() - rotlimit) <= 1)
 				rotdir = 0;
-		} //end arm animations
+		}
+	}
+	else if (xvel < -0.5) {
+		if (rotdir == 0) {
+			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
+			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
+			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
+			leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
+			if (abs(rightArm.getRotation() - rotlimit) <= 1)
+				rotdir = 1;
+		}
+		else if (rotdir == 1) {
+			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
+			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
+			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
+			leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
+			if (abs(leftArm.getRotation() - rotlimit) <= 1)
+				rotdir = 0;
+		}
+	}
+	else {
+		if (rightArm.getRotation() != 0) {
+			if (rightArm.getRotation() > rotlimit)
+				rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
+			if (rightArm.getRotation() < rotlimit)
+				rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
+		}
+		if (leftArm.getRotation() != 0) {
+			if (leftArm.getRotation() > rotlimit)
+				leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
+			if (leftArm.getRotation() < rotlimit)
+				leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
+		}
+		if (rightLeg.getRotation() != 0) {
+			if (rightLeg.getRotation() > rotlimit)
+				rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
+			if (rightLeg.getRotation() < rotlimit)
+				rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
+		}
+		if (leftLeg.getRotation() != 0) {
+			if (leftLeg.getRotation() > rotlimit)
+				leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
+			if (leftLeg.getRotation() < rotlimit)
+				leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
+		}
+	}
+}
+
+void player::handleEvent(sf::Event &event) {
+	if (event.type == sf::Event::KeyPressed) {
+		if (event.key.code == sf::Keyboard::D) {
+			accelright = true;
+		}
+		if (event.key.code == sf::Keyboard::A) {
+			accelleft = true;
+		}
+		if (event.key.code == sf::Keyboard::W) {
+			accelup = true;
+		}
+		if (event.key.code == sf::Keyboard::S) {
+			acceldown = true;
+		}
+	}
+	if (event.type == sf::Event::KeyReleased) {
+		if (event.key.code == sf::Keyboard::D) {
+			accelright = false;
+		}
+		if (event.key.code == sf::Keyboard::A) {
+			accelleft = false;
+		}
+		if (event.key.code == sf::Keyboard::W) {
+			accelup = false;
+		}
+		if (event.key.code == sf::Keyboard::S) {
+			acceldown = false;
+		}
 	}
 }
 
 void player::update(double time) {
 	animate(time);
+
+
+	//movement
+	if (accelright && xvel < speed)
+		xvel += speed*time;
+	if (accelleft && xvel > -1*speed)
+		xvel -= speed*time;
+	if (!accelright && xvel > 0)
+		xvel -= speed*time;
+	if (!accelleft && xvel < 0)
+		xvel += speed*time;
+
+	if (xvel != 0) 
+		xpos += xvel*time;
 }

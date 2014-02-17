@@ -1,5 +1,6 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
+#include <SFML/Graphics.hpp>
 #include <cmath>
 #include "entity.hpp"
 
@@ -10,6 +11,7 @@ public:
 	void draw(sf::RenderWindow &window);
 	void animate(double time);
 	void update(double time);
+	void handleEvent(sf::Event &event);
 protected:
 	//body parts
 	sf::CircleShape head;
@@ -25,6 +27,9 @@ protected:
 	bool rotdir;
 
 	float conversion; //conversion rate from pixels to game units
+
+	//stats
+	double speed;
 };
 
 #endif

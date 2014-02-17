@@ -11,6 +11,8 @@ int main() {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
+			else
+				world.handleEvent(event);
 		}
 		window.clear(sf::Color::Black);
 		world.update(clock.getElapsedTime().asSeconds());

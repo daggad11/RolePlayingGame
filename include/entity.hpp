@@ -15,6 +15,10 @@ protected:
 	double mass;
 	double width;
 	double height;
+	bool accelright;
+	bool accelleft;
+	bool accelup;
+	bool acceldown;
 };
 
 #endif
