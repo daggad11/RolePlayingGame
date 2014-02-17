@@ -3,6 +3,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "player.hpp"
+#include "chunk.hpp"
 
 class world {
 public:
