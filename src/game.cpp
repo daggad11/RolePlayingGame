@@ -4,7 +4,7 @@
 int main() {
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "RPG");
 	sf::Clock clock;
-	world world(window.getSize().x/20);
+	world world(window.getSize().x/30);
 
 	while (window.isOpen()) {
 		sf::Event event;

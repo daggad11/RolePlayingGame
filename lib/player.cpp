@@ -9,7 +9,7 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->xpos = xpos;
 	this->ypos = ypos;
 
-	this->speed = 3;
+	this->speed = 5;
 	
 	this->xvel = 0;
 	this->yvel = 0;
@@ -71,7 +71,7 @@ void player::draw(sf::RenderWindow &window) {
 
 void player::animate(double time) {
 	//limb animation
-	if (accelright) {
+	if (accelright || accelleft) {
 		if (rotdir == 0) {
 			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
 			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
@@ -89,7 +89,25 @@ void player::animate(double time) {
 				rotdir = 0;
 		}
 	}
-	else if (accelleft) {
+	else {
+		if (rotdir == 0 && rightArm.getRotation() > 1) {
+			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
+			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
+			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
+			leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
+			if (abs(rightArm.getRotation() - rotlimit) <= 1)
+				rotdir = 1;
+		}
+		else if (rotdir == 1 && leftArm.getRotation() > 1) {
+			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
+			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
+			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
+			leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
+			if (abs(leftArm.getRotation() - rotlimit) <= 1)
+				rotdir = 0;
+		}
+	}
+	/*else if (accelleft) {
 		if (rotdir == 0) {
 			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
 			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
@@ -132,7 +150,7 @@ void player::animate(double time) {
 			if (leftLeg.getRotation() < rotlimit)
 				leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
 		}
-	} //end limb animation
+	} //end limb animation*/
 }
 
 void player::handleEvent(sf::Event &event) {
