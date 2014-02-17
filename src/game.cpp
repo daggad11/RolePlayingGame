@@ -1,8 +1,11 @@
 #include <SFML/Graphics.hpp>
+#include <cstdio>
 #include "world.hpp"
 
-int main() {
-	sf::RenderWindow window(sf::VideoMode(1920, 1080), "RPG");
+int main(int argc, char *argv[]) {
+	int width = atoi(argv[1]);
+	int height = atoi(argv[2]);
+	sf::RenderWindow window(sf::VideoMode(width, height), "RPG");
 	sf::Clock clock;
 	world world1(window.getSize().x/30);
 
