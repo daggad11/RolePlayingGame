@@ -3,3 +3,4 @@ compile
 Makefile
 run
 build/*
+bin/*
