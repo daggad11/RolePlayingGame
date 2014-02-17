@@ -70,7 +70,8 @@ void player::draw(sf::RenderWindow &window) {
 }
 
 void player::animate(double time) {
-	if (xvel > 0.5) {
+	//limb animation
+	if (accelright) {
 		if (rotdir == 0) {
 			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
 			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
@@ -88,7 +89,7 @@ void player::animate(double time) {
 				rotdir = 0;
 		}
 	}
-	else if (xvel < -0.5) {
+	else if (accelleft) {
 		if (rotdir == 0) {
 			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
 			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
@@ -131,7 +132,7 @@ void player::animate(double time) {
 			if (leftLeg.getRotation() < rotlimit)
 				leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
 		}
-	}
+	} //end limb animation
 }
 
 void player::handleEvent(sf::Event &event) {
@@ -175,9 +176,9 @@ void player::update(double time) {
 	if (accelleft && xvel > -1*speed)
 		xvel -= speed*time;
 	if (!accelright && xvel > 0)
-		xvel -= speed*time;
+		xvel -= speed*2*time;
 	if (!accelleft && xvel < 0)
-		xvel += speed*time;
+		xvel += speed*2*time;
 
 	if (xvel != 0) 
 		xpos += xvel*time;
