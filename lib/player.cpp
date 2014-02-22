@@ -107,50 +107,6 @@ void player::animate(double time) {
 				rotdir = 0;
 		}
 	}
-	/*else if (accelleft) {
-		if (rotdir == 0) {
-			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
-			if (abs(rightArm.getRotation() - rotlimit) <= 1)
-				rotdir = 1;
-		}
-		else if (rotdir == 1) {
-			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
-			if (abs(leftArm.getRotation() - rotlimit) <= 1)
-				rotdir = 0;
-		}
-	}
-	else {
-		if (rightArm.getRotation() != 0) {
-			if (rightArm.getRotation() > rotlimit)
-				rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
-			if (rightArm.getRotation() < rotlimit)
-				rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
-		}
-		if (leftArm.getRotation() != 0) {
-			if (leftArm.getRotation() > rotlimit)
-				leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
-			if (leftArm.getRotation() < rotlimit)
-				leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
-		}
-		if (rightLeg.getRotation() != 0) {
-			if (rightLeg.getRotation() > rotlimit)
-				rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
-			if (rightLeg.getRotation() < rotlimit)
-				rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
-		}
-		if (leftLeg.getRotation() != 0) {
-			if (leftLeg.getRotation() > rotlimit)
-				leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
-			if (leftLeg.getRotation() < rotlimit)
-				leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
-		}
-	} //end limb animation*/
 }
 
 void player::handleEvent(sf::Event &event) {
@@ -194,9 +150,9 @@ void player::update(double time) {
 	if (accelleft && xvel > -1*speed)
 		xvel -= speed*time;
 	if (!accelright && xvel > 0)
-		xvel -= speed*2*time;
+		xvel -= speed*4*time;
 	if (!accelleft && xvel < 0)
-		xvel += speed*2*time;
+		xvel += speed*4*time;
 
 	if (xvel != 0) 
 		xpos += xvel*time;
