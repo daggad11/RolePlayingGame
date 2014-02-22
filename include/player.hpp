@@ -25,6 +25,7 @@ protected:
 	double rotlimit;
 	double rotconversion;
 	bool rotdir;
+	bool direction;
 
 	float conversion; //conversion rate from pixels to game units
 
