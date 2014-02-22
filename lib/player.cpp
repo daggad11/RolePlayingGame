@@ -1,6 +1,9 @@
 #include "player.hpp"
 #include <iostream>
 
+const bool LEFT = 0;
+const bool RIGHT = 1;
+
 player::player() {
 	//todo
 }
@@ -24,8 +27,10 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	
 	this->conversion = conv;
 	this->rotdir = 0;
-	this->rotconversion = 200;
+	this->rotconversion = 250;
 	this->rotlimit = 60;
+
+	this->direction = LEFT;
 
 	//scaling bodyparts
 	head.setRadius(height/6);
@@ -50,15 +55,35 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	leftArm.setOrigin(leftArm.getSize().x/2, 0);
 	rightLeg.setOrigin(rightLeg.getSize().x/2, 0);
 	leftLeg.setOrigin(leftLeg.getSize().x/2, 0);
+
+	//setting body parts colors
+	head.setFillColor(sf::Color::Red);
+	torso.setFillColor(sf::Color::Green);
+	rightArm.setFillColor(sf::Color::Red);
+	leftArm.setFillColor(sf::Color::Blue);
+	rightLeg.setFillColor(sf::Color::Red);
+	leftLeg.setFillColor(sf::Color::Blue);
 }
 
 void player::draw(sf::RenderWindow &window) {
 	window.draw(head);
+	if (direction == LEFT) {
+		window.draw(rightArm);
+		window.draw(rightLeg);
+	}
+	else {
+		window.draw(leftArm);
+		window.draw(leftLeg);		
+	}
 	window.draw(torso);
-	window.draw(rightArm);
-	window.draw(leftArm);
-	window.draw(rightLeg);
-	window.draw(leftLeg);
+	if (direction == RIGHT) {
+		window.draw(rightArm);
+		window.draw(rightLeg);
+	}
+	else {
+		window.draw(leftArm);
+		window.draw(leftLeg);		
+	}
 
 	//positioning bodyparts
 	head.setPosition(xpos*conversion+width*conversion/2, ypos*conversion);
@@ -113,9 +138,11 @@ void player::handleEvent(sf::Event &event) {
 	if (event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::D) {
 			accelright = true;
+			direction = RIGHT;
 		}
 		if (event.key.code == sf::Keyboard::A) {
 			accelleft = true;
+			direction = LEFT;
 		}
 		if (event.key.code == sf::Keyboard::W) {
 			accelup = true;
@@ -146,9 +173,9 @@ void player::update(double time) {
 
 	//movement
 	if (accelright && xvel < speed)
-		xvel += speed*time;
+		xvel += speed*time*3;
 	if (accelleft && xvel > -1*speed)
-		xvel -= speed*time;
+		xvel -= speed*time*3;
 	if (!accelright && xvel > 0)
 		xvel -= speed*4*time;
 	if (!accelleft && xvel < 0)
