@@ -12,8 +12,8 @@ public:
 	void update(double time);
 	void handleEvent(sf::Event &event);
 private:
-	std::vector<entity> entities;
-	std::vector<chunk> chunks;
+	std::vector<entity*> entities;
+	std::vector<chunk*> chunks;
 	player player1;
 };
 

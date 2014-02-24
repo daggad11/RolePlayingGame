@@ -2,10 +2,15 @@
 
 world::world(float conv) {
 	player1.init(1, 1, 1, .5, 1.8, conv);
+	chunks.push_back(new chunk(conv));
 }
 
 void world::draw(sf::RenderWindow &window) {
 	player1.draw(window);
+	
+	for (auto chunk : chunks) {
+		chunk->draw(window);
+	}
 }
 
 void world::update(double time) {

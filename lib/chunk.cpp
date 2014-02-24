@@ -6,7 +6,9 @@ chunk::chunk() {
 
 chunk::chunk(float conversion)
 {
-
+	conv = conversion;
+	generate();
+	triangulate();
 }
 
 chunk::chunk(double width, double height)
