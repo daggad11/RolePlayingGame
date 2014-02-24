@@ -181,6 +181,6 @@ void player::update(double time) {
 	if (!accelleft && xvel < 0)
 		xvel += speed*4*time;
 
-	if (xvel != 0) 
+	if (abs(xvel) > .1) 
 		xpos += xvel*time;
 }

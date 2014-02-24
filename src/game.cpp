@@ -6,6 +6,7 @@ int main(int argc, char *argv[]) {
 	int width = atoi(argv[1]);
 	int height = atoi(argv[2]);
 	sf::RenderWindow window(sf::VideoMode(width, height), "RPG");
+	window.setFramerateLimit(60);
 	sf::Clock clock;
 	world world1(window.getSize().x/30);
 
