@@ -66,7 +66,6 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 }
 
 void player::draw(sf::RenderWindow &window) {
-	window.draw(head);
 	if (direction == LEFT) {
 		window.draw(rightArm);
 		window.draw(rightLeg);
@@ -84,7 +83,8 @@ void player::draw(sf::RenderWindow &window) {
 		window.draw(leftArm);
 		window.draw(leftLeg);		
 	}
-
+	window.draw(head);
+	
 	//positioning bodyparts
 	head.setPosition(xpos*conversion+width*conversion/2, ypos*conversion);
 	rightArm.setPosition(xpos*conversion+width*conversion/2, ypos*conversion+head.getRadius()*2);
