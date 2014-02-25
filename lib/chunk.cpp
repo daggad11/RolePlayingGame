@@ -1,14 +1,45 @@
+/* 
+ * RolePlayingGame Copyright (c) 2014, RolePlayingGame Contributers
+ * https://github.com/daggad11/RolePlayingGame
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ * * Neither the name of RolePlayingGame nor the names of its contributors may be
+ *   used to endorse or promote products derived from this software without specific
+ *   prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 #include "chunk.hpp"
 
 chunk::chunk() {
 	//default constructor
 }
 
-chunk::chunk(float conversion)
+chunk::chunk(float conversion, sf::RenderWindow &window)
 {
 	conv = conversion;
 	generate();
 	triangulate();
+	convert(window);
 }
 
 chunk::chunk(double width, double height)
@@ -28,20 +59,34 @@ void chunk::triangulate()
 		{
 			p2t::Point* p = polygon.GetTriangles()[i]->GetPoint(j);
 			sf::Vertex* vert = new sf::Vertex(sf::Vector2f(p->x, p->y), sf::Vector2f(p->x, p->y));
+			std::cout << p->x << "," << p->y << "  "; 
 			triVerts.push_back(vert);
 		}
+		std::cout << std::endl;
 	}		
 }
 
-void chunk::draw(sf::RenderWindow &window) {
-	std::vector<sf::Vertex*> scaled; //maybe the conversion should be done either once (make a converted list as a member) or in a function for ease of use...
-	for (int i = 0; i < triVerts.size(); i++)
+void chunk::convert(sf::RenderWindow &window)
+{
+	std::vector<sf::Vertex> v;
+	for (auto vert: triVerts)
 	{
-		sf::Vertex* v = new sf::Vertex(sf::Vector2f(triVerts[i]->position.x*conv, triVerts[i]->position.y*conv), sf::Color::White, sf::Vector2f(triVerts[i]->position.x*conv, triVerts[i]->position.y*conv));
-		scaled.push_back(v);
+		sf::Vector2f pos(vert->position.x*conv, window.getSize().y - (vert->position.y*conv));
+		sf::Vector2f texCoords(vert->texCoords.x*conv, window.getSize().y - (vert->texCoords.y*conv));	
+		v.push_back(*(new sf::Vertex(pos, sf::Color::Red, texCoords)));
+	}	
+	converted = v;
+	for (int i = 0; i < converted.size(); i++)
+	{
+		std::cout << converted[i].position.x << " " << converted[i].position.y << "  ";
+		if ((i+1)%3 == 0)
+			std::cout << std::endl;
 	}
+}
 
-    window.draw(scaled[0], scaled.size(), sf::Triangles);
+void chunk::draw(sf::RenderWindow &window) 
+{
+    window.draw(&converted[0], converted.size(), sf::Triangles);
 } 
 
 
