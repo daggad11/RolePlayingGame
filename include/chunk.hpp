@@ -33,7 +33,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "../lib/poly2tri/poly2tri.h" 
+#include <poly2tri.h> 
+
 
 class chunk {
 public:

@@ -59,10 +59,10 @@ void chunk::triangulate()
 		{
 			p2t::Point* p = polygon.GetTriangles()[i]->GetPoint(j);
 			sf::Vertex* vert = new sf::Vertex(sf::Vector2f(p->x, p->y), sf::Vector2f(p->x, p->y));
-			std::cout << p->x << "," << p->y << "  "; 
+			//std::cout << p->x << "," << p->y << "  "; 
 			triVerts.push_back(vert);
 		}
-		std::cout << std::endl;
+		//std::cout << std::endl;
 	}		
 }
 
@@ -76,12 +76,14 @@ void chunk::convert(sf::RenderWindow &window)
 		v.push_back(*(new sf::Vertex(pos, sf::Color::Red, texCoords)));
 	}	
 	converted = v;
-	for (int i = 0; i < converted.size(); i++)
+	//debugging text to console
+	/*for (int i = 0; i < converted.size(); i++)
 	{
 		std::cout << converted[i].position.x << " " << converted[i].position.y << "  ";
 		if ((i+1)%3 == 0)
 			std::cout << std::endl;
 	}
+	*/
 }
 
 void chunk::draw(sf::RenderWindow &window) 
