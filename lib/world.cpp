@@ -1,8 +1,8 @@
 #include "world.hpp"
 
-world::world(float conv) {
-	player1.init(1, 1, 1, .5, 1.8, conv);
-	chunks.push_back(new chunk(conv));
+world::world(float conversion, sf::RenderWindow &window) {
+	player1.init(1, 1, 1, .5, 1.8, conversion);
+	chunks.push_back(new chunk(conversion, window));
 }
 
 void world::draw(sf::RenderWindow &window) {

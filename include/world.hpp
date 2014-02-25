@@ -7,7 +7,7 @@
 
 class world {
 public:
-	world(float conv);
+	world(float conversion, sf::RenderWindow &window);
 	void draw(sf::RenderWindow &window);
 	void update(double time);
 	void handleEvent(sf::Event &event);

@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	sf::RenderWindow window(sf::VideoMode(width, height), "RPG");
 	window.setFramerateLimit(60);
 	sf::Clock clock;
-	world world1(window.getSize().x/30);
+	world world1(window.getSize().x/30, window);
 
 	while (window.isOpen()) {
 		sf::Event event;

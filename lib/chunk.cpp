@@ -4,11 +4,12 @@ chunk::chunk() {
 	//default constructor
 }
 
-chunk::chunk(float conversion)
+chunk::chunk(float conversion, sf::RenderWindow &window)
 {
 	conv = conversion;
 	generate();
 	triangulate();
+	convert(window);
 }
 
 chunk::chunk(double width, double height)
@@ -28,20 +29,34 @@ void chunk::triangulate()
 		{
 			p2t::Point* p = polygon.GetTriangles()[i]->GetPoint(j);
 			sf::Vertex* vert = new sf::Vertex(sf::Vector2f(p->x, p->y), sf::Vector2f(p->x, p->y));
+			std::cout << p->x << "," << p->y << "  "; 
 			triVerts.push_back(vert);
 		}
+		std::cout << std::endl;
 	}		
 }
 
-void chunk::draw(sf::RenderWindow &window) {
-	std::vector<sf::Vertex*> scaled; //maybe the conversion should be done either once (make a converted list as a member) or in a function for ease of use...
-	for (int i = 0; i < triVerts.size(); i++)
+void chunk::convert(sf::RenderWindow &window)
+{
+	std::vector<sf::Vertex> v;
+	for (auto vert: triVerts)
 	{
-		sf::Vertex* v = new sf::Vertex(sf::Vector2f(triVerts[i]->position.x*conv, triVerts[i]->position.y*conv), sf::Color::White, sf::Vector2f(triVerts[i]->position.x*conv, triVerts[i]->position.y*conv));
-		scaled.push_back(v);
+		sf::Vector2f pos(vert->position.x*conv, window.getSize().y - (vert->position.y*conv));
+		sf::Vector2f texCoords(vert->texCoords.x*conv, window.getSize().y - (vert->texCoords.y*conv));	
+		v.push_back(*(new sf::Vertex(pos, sf::Color::Red, texCoords)));
+	}	
+	converted = v;
+	for (int i = 0; i < converted.size(); i++)
+	{
+		std::cout << converted[i].position.x << " " << converted[i].position.y << "  ";
+		if ((i+1)%3 == 0)
+			std::cout << std::endl;
 	}
+}
 
-    window.draw(scaled[0], scaled.size(), sf::Triangles);
+void chunk::draw(sf::RenderWindow &window) 
+{
+    window.draw(&converted[0], converted.size(), sf::Triangles);
 } 
 
 
