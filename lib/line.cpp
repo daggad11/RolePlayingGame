@@ -9,8 +9,15 @@ std::array<sf::Vector2f*, 2>  line::getPoints() {
 	return points;
 }
 
-bool line::intersects(line otherline) {
-	sf::Rect<double> rect1(points[0]->x, points[0]->y, (points[1]->x-points[0]->x), (points[1]->y-points[0]->y));
-	sf::Rect<double> rect2(otherline.getPoints()[0]->x, otherline.getPoints()[0]->y, (otherline.getPoints()[1]->x-otherline.getPoints()[0]->x), (otherline.getPoints()[1]->y-otherline.getPoints()[0]->y));
-	return rect1.intersects(rect2);
+bool line::intersects(line l) {
+	std::array<sf::Vector2f*, 2> lPoints  = l.getPoints();
+	double denominator = ((points[0]->x - points[1]->x)*(lPoints[0]->y - lPoints[1]->y)) - ((points[0]->y - points[1]->y) - (lPoints[0]->x, lPoints[1]->x));
+	if (denominator == 0)
+		return false;
+	else	
+	{
+		return true;
+		double xDterm = ((points[0]->x*points[1]->y - points[0]->y*points[0]->x)*(lPoints[0]->x - lPoints[1]->x)) - ((points[0]->x - points[1]->x)*(lPoints[0]->x*lPoints[1]->y - lPoints[0]->y*lPoints[0]->x));
+		double yDterm = ((points[0]->x*points[1]->y - points[0]->y*points[0]->x)*(lPoints[0]->y - lPoints[1]->y)) - ((points[0]->y - points[1]->y)*(lPoints[0]->x*lPoints[1]->y - lPoints[0]->y*lPoints[0]->x)); 
+	}
 }
