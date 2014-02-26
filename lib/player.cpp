@@ -145,7 +145,7 @@ void player::animate(double time) {
 		}
 	}
 	else {
-		if (rotdir == 0 && rightArm.getRotation() > 1 && abs(rightArm.getRotation() - 360) > 1) {
+		if (rotdir == 0 && (rightArm.getRotation() > 1 && abs(rightArm.getRotation() - 360) > 1)) {
 			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
 			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
 			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
@@ -153,7 +153,7 @@ void player::animate(double time) {
 			if (abs(rightArm.getRotation() - rotlimit) <= 1)
 				rotdir = 1;
 		}
-		else if (rotdir == 1 && leftArm.getRotation() > 1 && abs(rightArm.getRotation() - 360) > 1) {
+		else if (rotdir == 1 && (leftArm.getRotation() > 1 && abs(leftArm.getRotation() - 360) > 1)) {
 			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
 			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
 			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);

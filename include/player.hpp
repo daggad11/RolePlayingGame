@@ -32,6 +32,7 @@
 #define PLAYER_HPP
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include "line.hpp"
 #include "entity.hpp"
 
 class player : public entity  {
