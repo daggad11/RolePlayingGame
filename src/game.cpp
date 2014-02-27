@@ -40,9 +40,6 @@ int main(int argc, char *argv[]) {
 	sf::Clock clock;
 	world world1(window.getSize().x/30, window);
 
-	line line1(0, 0, 4, 0);
-	line line2(3, 2, 3, 3);
-
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -56,8 +53,6 @@ int main(int argc, char *argv[]) {
 		clock.restart();
 		world1.draw(window);
 		window.display();
-
-		std::cout << "Intersects: " << line1.intersects(line2) << std::endl;
 	}
 	return 0;
 }

@@ -56,6 +56,7 @@ private:
 	double width;
 	double height;
 	float conv;
+	sf::Texture fill;
 };
 
 #endif

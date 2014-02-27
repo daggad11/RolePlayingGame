@@ -40,6 +40,8 @@ chunk::chunk(float conversion, sf::RenderWindow &window)
 	generate();
 	triangulate();
 	convert(window);
+	fill.loadFromFile("resources/textures/seamless_dirt.jpg");
+	fill.setRepeated(true);
 }
 
 chunk::chunk(double width, double height)
@@ -73,22 +75,22 @@ void chunk::convert(sf::RenderWindow &window)
 	{
 		sf::Vector2f pos(vert->position.x*conv, window.getSize().y - (vert->position.y*conv));
 		sf::Vector2f texCoords(vert->texCoords.x*conv, window.getSize().y - (vert->texCoords.y*conv));	
-		v.push_back(*(new sf::Vertex(pos, sf::Color::Red, texCoords)));
+		v.push_back(*(new sf::Vertex(pos, texCoords)));
 	}	
 	converted = v;
 	//debugging text to console
-	/*for (int i = 0; i < converted.size(); i++)
+	for (int i = 0; i < converted.size(); i++)
 	{
-		std::cout << converted[i].position.x << " " << converted[i].position.y << "  ";
+		std::cout << converted[i].texCoords.x << " " << converted[i].texCoords.y << "  ";
 		if ((i+1)%3 == 0)
 			std::cout << std::endl;
 	}
-	*/
+	
 }
 
 void chunk::draw(sf::RenderWindow &window) 
 {
-    window.draw(&converted[0], converted.size(), sf::Triangles);
+    window.draw(&converted[0], converted.size(), sf::Triangles, &fill);
 } 
 
 
