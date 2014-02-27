@@ -2,6 +2,7 @@
 #define LINE_HPP
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <algorithm>
 
 class line {
 public:
