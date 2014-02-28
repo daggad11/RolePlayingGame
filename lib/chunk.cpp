@@ -79,12 +79,12 @@ void chunk::convert(sf::RenderWindow &window)
 	}	
 	converted = v;
 	//debugging text to console
-	for (int i = 0; i < converted.size(); i++)
+	/*for (int i = 0; i < converted.size(); i++)
 	{
 		std::cout << converted[i].texCoords.x << " " << converted[i].texCoords.y << "  ";
 		if ((i+1)%3 == 0)
 			std::cout << std::endl;
-	}
+	}*/
 	
 }
 
