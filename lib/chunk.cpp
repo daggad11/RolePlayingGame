@@ -44,10 +44,14 @@ chunk::chunk(float conversion, sf::RenderWindow &window)
 	fill.setRepeated(true);
 }
 
-chunk::chunk(double width, double height)
+chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::RenderWindow &window)
 {
-	this->width = width;
-	this->height = height;
+	conv = conversion;
+	generate();
+	triangulate();
+	convert(window);
+	this->start = start;
+	this->end = end;
 }
 
 void chunk::triangulate()
@@ -97,6 +101,7 @@ void chunk::draw(sf::RenderWindow &window)
 //generates a random chunk, with a fixed width and starting height (if set)
 void chunk::generate()
 {
+
 	//todo: make a random world generator.
 	//test points
 	polyLine.push_back(new p2t::Point(10.0, 0.0));

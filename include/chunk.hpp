@@ -41,23 +41,19 @@ class chunk {
 public:
 	chunk();
 	chunk(float conversion, sf::RenderWindow &window);
-	chunk(double width, double height);
+	chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::RenderWindow &window);
 	void draw(sf::RenderWindow &window);
 	void generate();
 	void triangulate();
 	void convert(sf::RenderWindow &window);
-	void setWidth(double width){this->width = width;};
-	void setHeight(double height){this->height = height;};
-	double getHeight(){return height;};
-	double getWidth(){return width;};
 	std::vector<line*> getLines();
 private:
 	std::vector<sf::Vertex*> triVerts;
 	std::vector<p2t::Point*> polyLine;
 	std::vector<sf::Vertex> converted;
 	std::vector<line*> lines;
-	double width;
-	double height;
+	sf::Vector2f* start;
+	sf::Vector2f* end;
 	float conv;
 	sf::Texture fill;
 };
