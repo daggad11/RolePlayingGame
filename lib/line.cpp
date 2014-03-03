@@ -5,6 +5,11 @@ line::line(double x1, double y1, double x2, double y2) {
 	points[1] = new sf::Vector2f(x2, y2);
 }
 
+line::line(p2t::Point* start, p2t::Point* end) {
+	points[0] = new sf::Vector2f(start->x, start->y);
+	points[1] = new sf::Vector2f(end->x, end->y);
+}
+
 std::array<sf::Vector2f*, 2>  line::getPoints() {
 	return points;
 }

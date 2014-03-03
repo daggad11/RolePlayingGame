@@ -34,6 +34,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <poly2tri.h> 
+#include <line.hpp>
 
 
 class chunk {
@@ -49,10 +50,12 @@ public:
 	void setHeight(double height){this->height = height;};
 	double getHeight(){return height;};
 	double getWidth(){return width;};
+	std::vector<line*> getLines();
 private:
 	std::vector<sf::Vertex*> triVerts;
 	std::vector<p2t::Point*> polyLine;
 	std::vector<sf::Vertex> converted;
+	std::vector<line*> lines;
 	double width;
 	double height;
 	float conv;

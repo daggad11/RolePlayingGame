@@ -111,4 +111,8 @@ void chunk::generate()
 	polyLine.push_back(new p2t::Point(1.0, 3.25));
 	polyLine.push_back(new p2t::Point(0.0, 1.0));
 	polyLine.push_back(new p2t::Point(0.0, 0.0));
+	for (int i = 0; i < polyLine.size() - 1; i++)
+	{
+		lines.push_back(new line(polyLine[i], polyLine[i+1]));
+	}
 }
