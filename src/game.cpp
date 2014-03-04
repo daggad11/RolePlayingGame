@@ -56,7 +56,6 @@ int main(int argc, char *argv[]) {
 		window.setView(view1);
 		world1.draw(window);
 		window.display();
-		std::cout << view1.getCenter().x << std::endl;
 	}
 	return 0;
 }
