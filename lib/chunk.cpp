@@ -41,8 +41,8 @@ chunk::chunk(float conversion, sf::RenderWindow* window)
 	generate();
 	triangulate();
 	convert();
-	fill.loadFromFile("resources/textures/seamless_dirt.jpg");
-	fill.setRepeated(true);
+	//fill.loadFromFile("resources/textures/seamless_dirt.jpg"); //textures aren't important yet.
+	//fill.setRepeated(true);
 }
 
 chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::RenderWindow* window)
@@ -54,7 +54,8 @@ chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::Rende
 	generate();
 	triangulate();
 	convert();
-	
+	//fill.loadFromFile("resources/textures/seamless_dirt.jpg"); //textures aren't important yet.
+	//fill.setRepeated(true);
 }
 
 void chunk::triangulate()
@@ -107,24 +108,24 @@ void chunk::generate()
 	typedef std::chrono::high_resolution_clock sysclock; //too many goddamn ::s. Maybe chase was right...
 	sysclock::time_point now = sysclock::now();
 	sysclock::duration d = now.time_since_epoch();
-	std::cout << d.count() << std::endl;
+	std::cout << "Seed: " << d.count() << "." << std::endl;
 	std::default_random_engine generator;
 	generator.seed(d.count());
 	now.~time_point();
 	d.~duration();
 	std::uniform_real_distribution<double> dist(0, 1.0); 
-	std::cout << "Created distribution" << std::endl;
-	polyLine.push_back(new p2t::Point(0.0, 5.0)); //should have start->x, start->y, placeholder values for now
-	polyLine.push_back(new p2t::Point(30.0, 5.0)); //should have end->x, end->y, placeholder values for now 
+	polyLine.push_back(new p2t::Point(start->x, start->y));
+	polyLine.push_back(new p2t::Point(end->x, end->y)); 
 	auto random = std::bind(dist, generator);
-	std::cout << "random() created" << std::endl;
 	float maxDepth = 4.0; //current generation depth is only 4, float type is IMPORTANT
 	for(float depth = 1.0; depth <= maxDepth; depth+=1.0)
 	{
-		for (int i = 0; i < polyLine.size() - 1; i+=2) //iterates through the vector and adds in new points
+		for (int i = 0; i < polyLine.size() - 1; i+=2) //iterates through the vector and adds in new points between the original ones.
 		{
-			p2t::Point* p = new p2t::Point(utils::getRand(polyLine[i]->x, polyLine[i+1]->x, dist(generator)), (polyLine[i]->y + polyLine[i+1]->y)/2.0 + utils::getRand(-10.0, 10.0, dist(generator))/depth);
-			std::cout << "Generated correctly." << std::endl;
+			double randX = utils::getRand(polyLine[i]->x, polyLine[i+1]->x, random());
+			double randY = (polyLine[i]->y + polyLine[i+1]->y)/2.0 + (utils::getRand(-5.0, 5.0, random())/(depth)); //operator precedence screws up here (hence all the parenned stuff), it's really strange
+			p2t::Point* p = new p2t::Point(randX, randY); 
+			//std::cout << "Generated correctly." << std::endl;
 			polyLine.insert(polyLine.begin()+i+1, p);
 			std::cout << "Added a new point." << std::endl;
 		}		
@@ -151,4 +152,6 @@ void chunk::generate()
 		lines.push_back(new line(polyLine[i], polyLine[i+1]));
 	}
 	*/
+	polyLine.push_back(new p2t::Point(end->x, 0.0));
+	polyLine.insert(polyLine.begin(), new p2t::Point(start->x, 0.0));
 }
