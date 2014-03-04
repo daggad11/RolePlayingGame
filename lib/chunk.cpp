@@ -108,7 +108,7 @@ void chunk::generate()
 	typedef std::chrono::high_resolution_clock sysclock; //too many goddamn ::s. Maybe chase was right...
 	sysclock::time_point now = sysclock::now();
 	sysclock::duration d = now.time_since_epoch();
-	std::cout << "Seed: " << d.count() << "." << std::endl;
+	//std::cout << "Seed: " << d.count() << "." << std::endl;
 	std::default_random_engine generator;
 	generator.seed(d.count());
 	now.~time_point();
@@ -117,19 +117,18 @@ void chunk::generate()
 	polyLine.push_back(new p2t::Point(start->x, start->y));
 	polyLine.push_back(new p2t::Point(end->x, end->y)); 
 	auto random = std::bind(dist, generator);
-	float maxDepth = 4.0; //current generation depth is only 4, float type is IMPORTANT
+	float maxDepth = 5.0; //current generation depth is only 4, float type is IMPORTANT
 	for(float depth = 1.0; depth <= maxDepth; depth+=1.0)
 	{
 		for (int i = 0; i < polyLine.size() - 1; i+=2) //iterates through the vector and adds in new points between the original ones.
 		{
 			double randX = utils::getRand(polyLine[i]->x, polyLine[i+1]->x, random());
-			double randY = (polyLine[i]->y + polyLine[i+1]->y)/2.0 + (utils::getRand(-5.0, 5.0, random())/(depth)); //operator precedence screws up here (hence all the parenned stuff), it's really strange
+			double randY = ((polyLine[i]->y + polyLine[i+1]->y)/2.0) + utils::getRand(0.0, 3.0, random())/(pow(depth, 2)); //operator precedence screws up here (hence all the parenned stuff), it's really strange
 			p2t::Point* p = new p2t::Point(randX, randY); 
-			//std::cout << "Generated correctly." << std::endl;
 			polyLine.insert(polyLine.begin()+i+1, p);
-			std::cout << "Added a new point." << std::endl;
+			//std::cout << "Added a new point." << std::endl;
 		}		
-		std::cout << "Layer " << depth << " added." << std::endl;
+		//std::cout << "Layer " << depth << " added." << std::endl;
 	}
 
 	//todo: make a random world generator.
