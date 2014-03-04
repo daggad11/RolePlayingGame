@@ -34,22 +34,24 @@ chunk::chunk() {
 	//default constructor
 }
 
-chunk::chunk(float conversion, sf::RenderWindow &window)
+chunk::chunk(float conversion, sf::RenderWindow* window)
 {
+	this->window = window;
 	conv = conversion;
 	generate();
 	triangulate();
-	convert(window);
+	convert();
 	fill.loadFromFile("resources/textures/seamless_dirt.jpg");
 	fill.setRepeated(true);
 }
 
-chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::RenderWindow &window)
+chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::RenderWindow* window)
 {
+	this->window = window;
 	conv = conversion;
 	generate();
 	triangulate();
-	convert(window);
+	convert();
 	this->start = start;
 	this->end = end;
 }
@@ -72,13 +74,13 @@ void chunk::triangulate()
 	}		
 }
 
-void chunk::convert(sf::RenderWindow &window)
+void chunk::convert()
 {
 	std::vector<sf::Vertex> v;
 	for (auto vert: triVerts)
 	{
-		sf::Vector2f pos(vert->position.x*conv, window.getSize().y - (vert->position.y*conv));
-		sf::Vector2f texCoords(vert->texCoords.x*conv, window.getSize().y - (vert->texCoords.y*conv));	
+		sf::Vector2f pos(vert->position.x*conv, window->getSize().y - (vert->position.y*conv));
+		sf::Vector2f texCoords(vert->texCoords.x*conv, window->getSize().y - (vert->texCoords.y*conv));	
 		v.push_back(*(new sf::Vertex(pos, texCoords)));
 	}	
 	converted = v;
@@ -92,9 +94,9 @@ void chunk::convert(sf::RenderWindow &window)
 	
 }
 
-void chunk::draw(sf::RenderWindow &window) 
+void chunk::draw() 
 {
-    window.draw(&converted[0], converted.size(), sf::Triangles, &fill);
+    window->draw(&converted[0], converted.size(), sf::Triangles, &fill);
 } 
 
 

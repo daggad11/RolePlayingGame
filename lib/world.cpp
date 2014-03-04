@@ -32,14 +32,14 @@
 
 world::world(float conversion, sf::RenderWindow &window) {
 	player1.init(1, 1, 1, .5, 1.8, conversion);
-	chunks.push_back(new chunk(conversion, window));
+	chunks.push_back(new chunk(conversion, &window));
 }
 
 void world::draw(sf::RenderWindow &window) {
 	player1.draw(window);
 	
 	for (auto chunk : chunks) {
-		chunk->draw(window);
+		chunk->draw();
 	}
 }
 
