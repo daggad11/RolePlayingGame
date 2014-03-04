@@ -33,8 +33,10 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <chrono>
 #include <SFML/Graphics.hpp>
 #include <poly2tri.h> 
+#include <utils.hpp>
 #include <line.hpp>
 
 
@@ -49,16 +51,15 @@ public:
 	void convert();
 	std::vector<line*> getLines();
 private:
-	std::vector<sf::Vertex*> triVerts;
-	std::vector<p2t::Point*> polyLine;
-	std::vector<sf::Vertex> converted;
-	std::vector<line*> lines;
+	std::vector<sf::Vertex*> triVerts; //in-engine unit triangles
+	std::vector<p2t::Point*> polyLine; //initial list of points generated to be triangulated for drawing (anitclockwise)
+	std::vector<sf::Vertex> converted; //converted triangles to be drawn
+	std::vector<line*> lines; //list of lines for hit detection
 	sf::RenderWindow* window;
 	sf::Texture fill;
 	sf::Vector2f* start;
 	sf::Vector2f* end;
 	float conv;
-	
 };
 
 #endif

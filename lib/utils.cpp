@@ -36,6 +36,7 @@ sf::Vertex* utils::wrapIndex(std::vector<sf::Vertex*> vertices, int i)
 			i %=  vertices.size();
 	return vertices[i];	
 }
+
 sf::Vector2f utils::createVector(sf::Vertex* u, sf::Vertex* v)
 {
 	sf::Vector2f resultant;
@@ -43,11 +44,23 @@ sf::Vector2f utils::createVector(sf::Vertex* u, sf::Vertex* v)
 	resultant.y = v->position.y - u->position.y;
 	return resultant;
 }
+
 double utils::getAngle(sf::Vector2f u, sf::Vector2f v)
 {
 	return acos((u.x*v.x + u.y*v.y)/(sqrt(u.x*u.x + u.y*u.y)*sqrt(v.x*v.x + v.y*v.y))); 
 }
+
 float utils::getZProduct(sf::Vector2f u, sf::Vector2f v)
 {
 	return u.x*v.y - v.x*u.y;
+}
+
+double utils::getRand(double start, double end, double randNum)
+{
+	return randNum*(end - start) + start;
+}
+
+float utils::getRand(float start, float end, float randNum)
+{
+	return randNum*(end - start) + start;
 }

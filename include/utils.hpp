@@ -36,8 +36,10 @@
 namespace utils {	
 	sf::Vertex* wrapIndex(std::vector<sf::Vertex*> vertices, int i);
 	sf::Vector2f createVector(sf::Vertex* u, sf::Vertex* v);
-  double getAngle(sf::Vector2f u, sf::Vector2f v);
+  	double getAngle(sf::Vector2f u, sf::Vector2f v);
 	float getZProduct(sf::Vector2f u, sf::Vector2f v);
+	double getRand(double start, double end, double randNum);
+	float getRand(float start, float end, float randNum);
 }
 
 #endif 

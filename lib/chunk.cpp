@@ -49,11 +49,12 @@ chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::Rende
 {
 	this->window = window;
 	conv = conversion;
+	this->start = start; //these have to go before generate()... this took me way too long to figure out (I persecuted several random generators needlessly)
+	this->end = end;
 	generate();
 	triangulate();
 	convert();
-	this->start = start;
-	this->end = end;
+	
 }
 
 void chunk::triangulate()
@@ -103,9 +104,36 @@ void chunk::draw()
 //generates a random chunk, with a fixed width and starting height (if set)
 void chunk::generate()
 {
+	typedef std::chrono::high_resolution_clock sysclock; //too many goddamn ::s. Maybe chase was right...
+	sysclock::time_point now = sysclock::now();
+	sysclock::duration d = now.time_since_epoch();
+	std::cout << d.count() << std::endl;
+	std::default_random_engine generator;
+	generator.seed(d.count());
+	now.~time_point();
+	d.~duration();
+	std::uniform_real_distribution<double> dist(0, 1.0); 
+	std::cout << "Created distribution" << std::endl;
+	polyLine.push_back(new p2t::Point(0.0, 5.0)); //should have start->x, start->y, placeholder values for now
+	polyLine.push_back(new p2t::Point(30.0, 5.0)); //should have end->x, end->y, placeholder values for now 
+	auto random = std::bind(dist, generator);
+	std::cout << "random() created" << std::endl;
+	float maxDepth = 4.0; //current generation depth is only 4, float type is IMPORTANT
+	for(float depth = 1.0; depth <= maxDepth; depth+=1.0)
+	{
+		for (int i = 0; i < polyLine.size() - 1; i+=2) //iterates through the vector and adds in new points
+		{
+			p2t::Point* p = new p2t::Point(utils::getRand(polyLine[i]->x, polyLine[i+1]->x, dist(generator)), (polyLine[i]->y + polyLine[i+1]->y)/2.0 + utils::getRand(-10.0, 10.0, dist(generator))/depth);
+			std::cout << "Generated correctly." << std::endl;
+			polyLine.insert(polyLine.begin()+i+1, p);
+			std::cout << "Added a new point." << std::endl;
+		}		
+		std::cout << "Layer " << depth << " added." << std::endl;
+	}
 
 	//todo: make a random world generator.
 	//test points
+	/*
 	polyLine.push_back(new p2t::Point(10.0, 0.0));
 	polyLine.push_back(new p2t::Point(9.0, 1.0));
 	polyLine.push_back(new p2t::Point(8.0, 5.0));
@@ -122,4 +150,5 @@ void chunk::generate()
 	{
 		lines.push_back(new line(polyLine[i], polyLine[i+1]));
 	}
+	*/
 }
