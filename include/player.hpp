@@ -41,7 +41,7 @@ public:
 	void init(double xpos, double ypos, double mass, double width, double height, float conv);
 	void draw(sf::RenderWindow &window);
 	void animate(double time);
-	void update(double time);
+	void update(double time, sf::View &view);
 	void handleEvent(sf::Event &event);
 protected:
 	//body parts

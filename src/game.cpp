@@ -30,12 +30,15 @@
  */
 #include <SFML/Graphics.hpp>
 #include <cstdio>
+#include <iostream>
 #include "world.hpp"
 
 int main(int argc, char *argv[]) {
 	int width = atoi(argv[1]);
 	int height = atoi(argv[2]);
 	sf::RenderWindow window(sf::VideoMode(width, height), "RPG");
+	sf::View view1(sf::FloatRect(0, 0, width, height));
+	window.setView(view1);
 	sf::Clock clock;
 	world world1(window.getSize().x/30, window);
 
@@ -48,10 +51,12 @@ int main(int argc, char *argv[]) {
 				world1.handleEvent(event);
 		}
 		window.clear(sf::Color::Black);
-		world1.update(clock.getElapsedTime().asSeconds());
+		world1.update(clock.getElapsedTime().asSeconds(), view1);
 		clock.restart();
+		window.setView(view1);
 		world1.draw(window);
 		window.display();
+		std::cout << view1.getCenter().x << std::endl;
 	}
 	return 0;
 }

@@ -197,12 +197,12 @@ void player::handleEvent(sf::Event &event) {
 	}
 }
 
-void player::update(double time) {
+void player::update(double time, sf::View &view) {
 	animate(time);
 
 
 	//movement
-	if (accelright && xvel < speed)
+	if (accelright && xvel < speed) 
 		xvel += speed*time*3;
 	if (accelleft && xvel > -1*speed)
 		xvel -= speed*time*3;
@@ -211,6 +211,8 @@ void player::update(double time) {
 	if (!accelleft && xvel < 0)
 		xvel += speed*4*time;
 
-	if (abs(xvel) > .1) 
+	if (abs(xvel) > .1)  {
 		xpos += xvel*time;
+		view.move(xvel*time*conversion, 0);
+	}
 }

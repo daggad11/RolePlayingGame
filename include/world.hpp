@@ -39,7 +39,7 @@ class world {
 public:
 	world(float conversion, sf::RenderWindow &window);
 	void draw(sf::RenderWindow &window);
-	void update(double time);
+	void update(double time, sf::View &view);
 	void handleEvent(sf::Event &event);
 private:
 	std::vector<entity*> entities;

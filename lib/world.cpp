@@ -43,8 +43,8 @@ void world::draw(sf::RenderWindow &window) {
 	}
 }
 
-void world::update(double time) {
-	player1.update(time);
+void world::update(double time, sf::View &view) {
+	player1.update(time, view);
 }
 
 void world::handleEvent(sf::Event &event) {
