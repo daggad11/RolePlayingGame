@@ -4,3 +4,4 @@ Makefile
 run
 build/*
 bin/*
+*.bat
