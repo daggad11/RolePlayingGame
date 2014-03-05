@@ -36,7 +36,7 @@
 int main(int argc, char *argv[]) {
 	int width = atoi(argv[1]);
 	int height = atoi(argv[2]);
-	sf::RenderWindow window(sf::VideoMode(width, height), "RPG", sf::Style::Fullscreen);
+	sf::RenderWindow window(sf::VideoMode(width, height), "RPG"/*, sf::Style::Fullscreen*/);
 	sf::View view1(sf::FloatRect(0, 0, width, height));
 	window.setView(view1);
 	sf::Clock clock;

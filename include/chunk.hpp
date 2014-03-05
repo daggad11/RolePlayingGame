@@ -49,7 +49,7 @@ public:
 	void generate();
 	void triangulate();
 	void convert();
-	void genGrass();
+	//void genGrass(); //In progress
 	std::vector<line*> getLines();
 private:
 	std::vector<sf::Vertex*> triVerts; //in-engine unit triangles, every 3 points define a new triangle

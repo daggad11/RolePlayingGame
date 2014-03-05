@@ -96,7 +96,7 @@ void chunk::generate()
 	polyLine.push_back(new p2t::Point(start->x, start->y));
 	polyLine.push_back(new p2t::Point(end->x, end->y)); 
 	auto random = std::bind(dist, generator);
-	float maxDepth = 5.0; //current generation depth is only 4, float type is IMPORTANT
+	float maxDepth = 4.0; //current generation depth is only 4, float type is IMPORTANT
 	for(float depth = 1.0; depth <= maxDepth; depth+=1.0)
 	{
 		for (int i = 0; i < polyLine.size() - 1; i+=2) //iterates through the vector and adds in new points between the original ones.
@@ -110,29 +110,13 @@ void chunk::generate()
 		//std::cout << "Layer " << depth << " added." << std::endl;
 	}
 
-	//todo: make a random world generator.
-	//test points
-	/*
-	polyLine.push_back(new p2t::Point(10.0, 0.0));
-	polyLine.push_back(new p2t::Point(9.0, 1.0));
-	polyLine.push_back(new p2t::Point(8.0, 5.0));
-	polyLine.push_back(new p2t::Point(7.0, 6.0));
-	polyLine.push_back(new p2t::Point(6.0, 4.0));
-	polyLine.push_back(new p2t::Point(5.0, 2.0));
-	polyLine.push_back(new p2t::Point(4.0, 3.0));
-	polyLine.push_back(new p2t::Point(3.0, 5.0));
-	polyLine.push_back(new p2t::Point(2.0, 4.5));
-	polyLine.push_back(new p2t::Point(1.0, 3.25));
-	polyLine.push_back(new p2t::Point(0.0, 1.0));
-	polyLine.push_back(new p2t::Point(0.0, 0.0));
-	*/
 	polyLine.push_back(new p2t::Point(end->x, 0.0));
 	polyLine.insert(polyLine.begin(), new p2t::Point(start->x, 0.0));
 	for (int i = 0; i < polyLine.size() - 1; i++)
 	{
 		lines.push_back(new line(polyLine[i], polyLine[i+1]));
 	}
-	genGrass();
+	//genGrass();
 }
 
 void chunk::convert()
@@ -147,10 +131,33 @@ void chunk::convert()
 	converted = v;
 }
 
+//I'll worry about this later...
+/* 
 void chunk::genGrass()
 {
+	for (int i = 0; i < lines.size(); i++)
+	{
+		bool intersects = false;
+		line* testLine = new Line(lines[i]->getMidPoint().x, lines[i]->getMidPoint().y, lines[i]->getMidPoint().x, lines[i]->getMidPoint().y + 50);
+		for (int j = 0; j < lines.size(); j++)
+		{
+			if (j == i)
+				continue;
+			else
+			{
+				if (lines[0]->intersects(testLine))
+				{
+					intersects = true;
+					break;
+				}
+			}
+		}
+		sf::RectangleShape r = new RectangleShape(sf::Vector2f(lines[i]->getLength, 5.0));
+		r.setPosition(min(lines[i]->getPoints()[0]->x, lines[i]->getPoints()[1]->x), )
 
+	}
 }
+*/
 
 std::vector<line*> chunk::getLines()
 {
