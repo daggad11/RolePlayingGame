@@ -14,8 +14,9 @@ std::array<sf::Vector2f*, 2>  line::getPoints() {
 	return points;
 }
 
-bool line::intersects(line l) {
-	std::array<sf::Vector2f*, 2> lPoints  = l.getPoints();
+bool line::intersects(line* l)
+{
+	std::array<sf::Vector2f*, 2> lPoints  = l->getPoints();
 	double A1 = points[1]->y - points[0]->y;
 	double B1 = points[0]->x - points[1]->x;
 	double C1 = A1*points[0]->x + B1*points[0]->y;
@@ -34,10 +35,37 @@ bool line::intersects(line l) {
 		if (std::min(points[0]->x, points[1]->x) <= x && std::max(points[0]->x, points[1]->x) >= x && std::min(points[0]->y, points[1]->y) <= y && std::max(points[0]->y, points[1]->y) >= y)
 		{
 			if (std::min(lPoints[0]->x, lPoints[1]->x) <= x && std::max(lPoints[0]->x, lPoints[1]->x) >= x && std::min(lPoints[0]->y, lPoints[1]->y) <= y && std::max(lPoints[0]->y, lPoints[1]->y) >= y)
+			{
+				xIntersect = x;
+				yIntersect = y;
+				other = l;
 				return true;
+			}
 			else return false;
 		}	
 		else return false;
 
+	}
+}
+
+sf::Vector2f line::getIntersect(line* l) {
+	if (l == other)
+	{
+		return sf::Vector2f(xIntersect, yIntersect);	
+	}
+	else
+	{
+		std::array<sf::Vector2f*, 2> lPoints  = l->getPoints();
+		double A1 = points[1]->y - points[0]->y;
+		double B1 = points[0]->x - points[1]->x;
+		double C1 = A1*points[0]->x + B1*points[0]->y;
+		double A2 = lPoints[1]->y - lPoints[0]->y;
+		double B2 = lPoints[0]->x - lPoints[1]->x;
+		double C2 = A2*lPoints[0]->x + B2*lPoints[0]->y;
+
+		double det =  A1*B2 - A2*B1;
+		double x = (B2*C1 - B1*C2)/det;
+		double y = (A1*C2 - A2*C1)/det;
+		return sf::Vector2f(x, y);
 	}
 }

@@ -10,9 +10,13 @@ public:
 	line(double x1, double y1, double x2, double y2);
 	line(p2t::Point* start, p2t::Point* end);
 	std::array<sf::Vector2f*, 2> getPoints();
-	bool intersects(line otherline);
+	sf::Vector2f getIntersect(line* otherLine); //this can ONLY be used if intersects(line* l) has already been called.
+	bool intersects(line* l);
 private:
 	std::array<sf::Vector2f*, 2> points;
+	line* other;
+	double xIntersect;
+	double yIntersect;
 };
 
 #endif
