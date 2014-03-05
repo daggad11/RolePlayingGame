@@ -49,6 +49,7 @@ protected:
 	bool accelleft;
 	bool accelup;
 	bool acceldown;
+	sf::RectangleShape hitbox;
 	sf::Vector2f netForce;
 };
 

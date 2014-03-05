@@ -58,11 +58,10 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->height = height;
 	
 	this->conversion = conv;
-	this->rotdir = 0;
-	this->rotconversion = 250;
-	this->rotlimit = 60;
+	this->rotSpeed = 180;
 
-	this->direction = LEFT;
+	this->moving = false;
+	this->direction = RIGHT;
 
 	//scaling bodyparts
 	head.setRadius(height/6);
@@ -127,43 +126,6 @@ void player::draw() {
 }
 
 void player::animate(double time) {
-	//limb animation
-	if (accelright || accelleft) {
-		if (rotdir == 0) {
-			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
-			if (abs(rightArm.getRotation() - rotlimit) <= 1)
-				rotdir = 1;
-		}
-		else if (rotdir == 1) {
-			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
-			if (abs(leftArm.getRotation() - rotlimit) <= 1)
-				rotdir = 0;
-		}
-	}
-	else {
-		if (rotdir == 0 && (rightArm.getRotation() > 1 && abs(rightArm.getRotation() - 360) > 1)) {
-			rightArm.setRotation(rightArm.getRotation()+time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()-time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()+time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()-time*rotconversion);
-			if (abs(rightArm.getRotation() - rotlimit) <= 1)
-				rotdir = 1;
-		}
-		else if (rotdir == 1 && (leftArm.getRotation() > 1 && abs(leftArm.getRotation() - 360) > 1)) {
-			rightArm.setRotation(rightArm.getRotation()-time*rotconversion);
-			leftArm.setRotation(leftArm.getRotation()+time*rotconversion);
-			rightLeg.setRotation(rightLeg.getRotation()-time*rotconversion);
-			leftLeg.setRotation(leftLeg.getRotation()+time*rotconversion);
-			if (abs(leftArm.getRotation() - rotlimit) <= 1)
-				rotdir = 0;
-		}
-	}
 }
 
 void player::handleEvent(sf::Event &event) {
@@ -200,8 +162,12 @@ void player::handleEvent(sf::Event &event) {
 }
 
 void player::update(double time, sf::View &view) {
+	if (accelleft || accelright)
+		moving = true;
 	animate(time);
 
+	hitbox.setPosition(sf::Vector2f(xpos, ypos));
+	hitbox.setSize(sf::Vector2f(width, height));
 
 	//movement
 	if (accelright && xvel < speed) 

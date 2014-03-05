@@ -55,9 +55,13 @@ protected:
 	sf::RectangleShape leftLeg;
 
 	//animation variables
-	double rotlimit;
-	double rotconversion;
-	bool rotdir;
+	double rightArmTarget;
+	double leftArmTarget;
+	double rightLegTarget;
+	double leftLegTarget;
+	double rotSpeed;
+
+	bool moving;
 	bool direction;
 
 	float conversion; //conversion rate from pixels to game units
