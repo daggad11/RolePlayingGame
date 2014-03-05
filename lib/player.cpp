@@ -38,7 +38,9 @@ player::player() {
 	//todo
 }
 
-void player::init(double xpos, double ypos, double mass, double width, double height, float conv) {
+void player::init(double xpos, double ypos, double mass, double width, double height, float conv, sf::RenderWindow *window) {
+	this->window = window;
+
 	this->xpos = xpos;
 	this->ypos = ypos;
 
@@ -95,25 +97,25 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	leftLeg.setFillColor(sf::Color::Blue);
 }
 
-void player::draw(sf::RenderWindow &window) {
+void player::draw() {
 	if (direction == LEFT) {
-		window.draw(rightArm);
-		window.draw(rightLeg);
+		window->draw(rightArm);
+		window->draw(rightLeg);
 	}
 	else {
-		window.draw(leftArm);
-		window.draw(leftLeg);		
+		window->draw(leftArm);
+		window->draw(leftLeg);		
 	}
-	window.draw(torso);
+	window->draw(torso);
 	if (direction == RIGHT) {
-		window.draw(rightArm);
-		window.draw(rightLeg);
+		window->draw(rightArm);
+		window->draw(rightLeg);
 	}
 	else {
-		window.draw(leftArm);
-		window.draw(leftLeg);		
+		window->draw(leftArm);
+		window->draw(leftLeg);		
 	}
-	window.draw(head);
+	window->draw(head);
 	
 	//positioning bodyparts
 	head.setPosition(xpos*conversion+width*conversion/2, ypos*conversion);
@@ -203,16 +205,26 @@ void player::update(double time, sf::View &view) {
 
 	//movement
 	if (accelright && xvel < speed) 
-		xvel += speed*time*3;
+		netForce.x += speed*3*mass;
 	if (accelleft && xvel > -1*speed)
-		xvel -= speed*time*3;
+		netForce.x -= speed*3*mass;
 	if (!accelright && xvel > 0)
-		xvel -= speed*4*time;
+		netForce.x -= speed*4*mass;
 	if (!accelleft && xvel < 0)
-		xvel += speed*4*time;
+		netForce.x += speed*4*mass;
 
-	if (abs(xvel) > .1)  {
+	//accelerating based off of forces
+	xvel += netForce.x/mass*time;
+	yvel+= netForce.y/mass*time;
+
+	if (abs(xvel) > .1)
 		xpos += xvel*time;
-		view.move(xvel*time*conversion, 0);
-	}
+	if (abs(yvel) > .1)
+		ypos += yvel*time;
+
+	//reseting net forces
+	netForce.x = 0;
+	netForce.y = 0;
+
+	view.setCenter(xpos*conversion, ypos*conversion); //centering view on player
 }

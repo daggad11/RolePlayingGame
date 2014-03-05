@@ -49,6 +49,7 @@ protected:
 	bool accelleft;
 	bool accelup;
 	bool acceldown;
+	sf::Vector2f netForce;
 };
 
 #endif

@@ -38,7 +38,7 @@
 class world {
 public:
 	world(float conversion, sf::RenderWindow &window);
-	void draw(sf::RenderWindow &window);
+	void draw();
 	void update(double time, sf::View &view);
 	void handleEvent(sf::Event &event);
 private:

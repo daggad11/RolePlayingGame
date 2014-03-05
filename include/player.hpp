@@ -38,12 +38,14 @@
 class player : public entity  {
 public:
 	player();
-	void init(double xpos, double ypos, double mass, double width, double height, float conv);
-	void draw(sf::RenderWindow &window);
+	void init(double xpos, double ypos, double mass, double width, double height, float conv, sf::RenderWindow *window);
+	void draw();
 	void animate(double time);
 	void update(double time, sf::View &view);
 	void handleEvent(sf::Event &event);
 protected:
+	sf::RenderWindow *window; //used for drawing
+
 	//body parts
 	sf::CircleShape head;
 	sf::RectangleShape torso;

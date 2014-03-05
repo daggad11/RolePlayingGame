@@ -39,6 +39,8 @@ entity::entity(double xpos, double ypos, double mass, double width, double heigh
 	this->ypos = ypos;
 	this->xvel = 0;
 	this->yvel = 0;
+	this->netForce.x = 0;
+	this->netForce.y = 0;
 	this->accelright = false;
 	this->accelleft = false;
 	this->accelup = false;
