@@ -49,12 +49,14 @@ public:
 	void generate();
 	void triangulate();
 	void convert();
+	void genGrass();
 	std::vector<line*> getLines();
 private:
-	std::vector<sf::Vertex*> triVerts; //in-engine unit triangles
-	std::vector<p2t::Point*> polyLine; //initial list of points generated to be triangulated for drawing (anitclockwise)
+	std::vector<sf::Vertex*> triVerts; //in-engine unit triangles, every 3 points define a new triangle
+	std::vector<p2t::Point*> polyLine; //initial list of points generated to be triangulated for drawing (counterclockwise)
 	std::vector<sf::Vertex> converted; //converted triangles to be drawn
 	std::vector<line*> lines; //list of lines for hit detection
+	std::vector<sf::RectangleShape*> grass;
 	sf::RenderWindow* window;
 	sf::Texture fill;
 	sf::Vector2f* start;

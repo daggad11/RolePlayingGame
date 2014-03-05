@@ -58,6 +58,11 @@ chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::Rende
 	//fill.setRepeated(true);
 }
 
+void chunk::draw() 
+{
+    window->draw(&converted[0], converted.size(), sf::Triangles, &fill);
+} 
+
 void chunk::triangulate()
 {
 	p2t::SweepContext polygon(polyLine); //context for sweep in order to triangulate
@@ -75,32 +80,6 @@ void chunk::triangulate()
 		//std::cout << std::endl;
 	}		
 }
-
-void chunk::convert()
-{
-	std::vector<sf::Vertex> v;
-	for (auto vert: triVerts)
-	{
-		sf::Vector2f pos(vert->position.x*conv, window->getSize().y - (vert->position.y*conv));
-		sf::Vector2f texCoords(vert->texCoords.x*conv, window->getSize().y - (vert->texCoords.y*conv));	
-		v.push_back(*(new sf::Vertex(pos, texCoords)));
-	}	
-	converted = v;
-	//debugging text to console
-	/*for (int i = 0; i < converted.size(); i++)
-	{
-		std::cout << converted[i].texCoords.x << " " << converted[i].texCoords.y << "  ";
-		if ((i+1)%3 == 0)
-			std::cout << std::endl;
-	}*/
-	
-}
-
-void chunk::draw() 
-{
-    window->draw(&converted[0], converted.size(), sf::Triangles, &fill);
-} 
-
 
 //generates a random chunk, with a fixed width and starting height (if set)
 void chunk::generate()
@@ -146,11 +125,34 @@ void chunk::generate()
 	polyLine.push_back(new p2t::Point(1.0, 3.25));
 	polyLine.push_back(new p2t::Point(0.0, 1.0));
 	polyLine.push_back(new p2t::Point(0.0, 0.0));
+	*/
+	polyLine.push_back(new p2t::Point(end->x, 0.0));
+	polyLine.insert(polyLine.begin(), new p2t::Point(start->x, 0.0));
 	for (int i = 0; i < polyLine.size() - 1; i++)
 	{
 		lines.push_back(new line(polyLine[i], polyLine[i+1]));
 	}
-	*/
-	polyLine.push_back(new p2t::Point(end->x, 0.0));
-	polyLine.insert(polyLine.begin(), new p2t::Point(start->x, 0.0));
+	genGrass();
+}
+
+void chunk::convert()
+{
+	std::vector<sf::Vertex> v;
+	for (auto vert: triVerts)
+	{
+		sf::Vector2f pos(vert->position.x*conv, window->getSize().y - (vert->position.y*conv));
+		sf::Vector2f texCoords(vert->texCoords.x*conv, window->getSize().y - (vert->texCoords.y*conv));	
+		v.push_back(*(new sf::Vertex(pos, texCoords)));
+	}	
+	converted = v;
+}
+
+void chunk::genGrass()
+{
+
+}
+
+std::vector<line*> chunk::getLines()
+{
+	return lines;
 }
