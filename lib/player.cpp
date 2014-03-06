@@ -166,9 +166,6 @@ void player::update(double time, sf::View &view) {
 		moving = true;
 	animate(time);
 
-	hitbox.setPosition(sf::Vector2f(xpos, ypos));
-	hitbox.setSize(sf::Vector2f(width, height));
-
 	//movement
 	if (accelright && xvel < speed) 
 		netForce.x += speed*3*mass;
@@ -181,7 +178,7 @@ void player::update(double time, sf::View &view) {
 
 	//accelerating based off of forces
 	xvel += netForce.x/mass*time;
-	yvel+= netForce.y/mass*time;
+	yvel -= netForce.y/mass*time;
 
 	if (abs(xvel) > .1)
 		xpos += xvel*time;
@@ -193,4 +190,28 @@ void player::update(double time, sf::View &view) {
 	netForce.y = 0;
 
 	view.setCenter(xpos*conversion, ypos*conversion); //centering view on player
+}
+
+void player::collide(std::vector<line*> *lines) {
+	line top(xpos, ypos, xpos + width, ypos);
+	line bottom(xpos, ypos + height, xpos + width, ypos + height);
+	line left(xpos, ypos, xpos, ypos + height);
+	line right(xpos + width, ypos, xpos + width, ypos + height); 
+	for (auto line : *lines) {
+			if (bottom.intersects(line)) {
+				std::cout << "collide" << std::endl;
+				applyForce(sf::Vector2f(0, -netForce.y));
+				yvel = 0;
+				return;
+			}
+	}
+}
+
+void player::applyForce(sf::Vector2f force) {
+	netForce += force;
+}
+
+//getters
+double player::getMass() {
+	return mass;
 }

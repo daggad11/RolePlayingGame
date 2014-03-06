@@ -33,6 +33,7 @@
 world::world(float conversion, sf::RenderWindow &window) {
 	player1.init(1, 1, 1, .5, 1.8, conversion, &window);
 	chunks.push_back(new chunk(new sf::Vector2f(0.0, 7.0), new sf::Vector2f(32.0, 10.0), conversion, &window));
+	gravity = -9.8;
 }
 
 void world::draw() {
@@ -43,6 +44,10 @@ void world::draw() {
 }
 
 void world::update(double time, sf::View &view) {
+	player1.applyForce(sf::Vector2f(0, player1.getMass() * gravity));
+	for (auto chunk : chunks) {
+		player1.collide(chunk->getLines());
+	}
 	player1.update(time, view);
 }
 

@@ -45,6 +45,8 @@ private:
 	std::vector<entity*> entities;
 	std::vector<chunk*> chunks;
 	player player1;
+
+	double gravity;
 };
 
 #endif

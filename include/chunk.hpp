@@ -50,7 +50,7 @@ public:
 	void triangulate();
 	void convert();
 	//void genGrass(); //In progress
-	std::vector<line*> getLines();
+	std::vector<line*> *getLines();
 private:
 	std::vector<sf::Vertex*> triVerts; //in-engine unit triangles, every 3 points define a new triangle
 	std::vector<p2t::Point*> polyLine; //initial list of points generated to be triangulated for drawing (counterclockwise)

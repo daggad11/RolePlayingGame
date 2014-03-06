@@ -48,9 +48,6 @@ entity::entity(double xpos, double ypos, double mass, double width, double heigh
 	this->mass = mass;
 	this->width = width;
 	this->height = height;
-
-	hitbox.setPosition(sf::Vector2f(xpos, ypos));
-	hitbox.setSize(sf::Vector2f(width, height));
 }
 
 void entity::draw(sf::RenderWindow &window) {

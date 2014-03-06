@@ -31,6 +31,7 @@
 #ifndef ENTITY_HPP
 #define ENTITY_HPP
 #include <SFML/Graphics.hpp>
+#include "line.hpp"
 
 class entity {
 public:
@@ -49,7 +50,6 @@ protected:
 	bool accelleft;
 	bool accelup;
 	bool acceldown;
-	sf::RectangleShape hitbox;
 	sf::Vector2f netForce;
 };
 

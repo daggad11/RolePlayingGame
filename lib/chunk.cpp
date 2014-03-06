@@ -159,7 +159,7 @@ void chunk::genGrass()
 }
 */
 
-std::vector<line*> chunk::getLines()
+std::vector<line*>* chunk::getLines()
 {
-	return lines;
+	return &lines;
 }

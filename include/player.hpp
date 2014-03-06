@@ -43,6 +43,11 @@ public:
 	void animate(double time);
 	void update(double time, sf::View &view);
 	void handleEvent(sf::Event &event);
+	void collide(std::vector<line*> *lines);
+	void applyForce(sf::Vector2f force);
+
+	//getters
+	double getMass();
 protected:
 	sf::RenderWindow *window; //used for drawing
 
