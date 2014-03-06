@@ -60,7 +60,8 @@ chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::Rende
 
 void chunk::draw() 
 {
-    window->draw(&converted[0], converted.size(), sf::Triangles, &fill);
+		window->draw(&convertedLines[0], convertedLines.size(), sf::Lines);
+    //window->draw(&converted[0], converted.size(), sf::Triangles, &fill);
 } 
 
 void chunk::triangulate()
@@ -129,8 +130,15 @@ void chunk::convert()
 		v.push_back(*(new sf::Vertex(pos, texCoords)));
 	}	
 	converted = v;
-}
 
+	std::vector<sf::Vertex> u;
+	for (int i = 0; i < lines.size() - 1; i+=2)
+	{
+		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[0].x*conv, window->getSize().y - lines[i]->getPoints()[0]->y*conv));
+		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[1].x*conv, window->getSize().y - lines[i]->getPoints()[1]->y*conv));
+	}
+
+}
 //I'll worry about this later...
 /* 
 void chunk::genGrass()
