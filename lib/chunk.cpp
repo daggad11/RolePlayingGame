@@ -60,7 +60,7 @@ chunk::chunk(sf::Vector2f* start, sf::Vector2f* end, float conversion, sf::Rende
 
 void chunk::draw() 
 {
-		window->draw(&convertedLines[0], convertedLines.size(), sf::Lines);
+		window->draw(&convertedLines[0], convertedLines.size(), sf::LinesStrip);
     //window->draw(&converted[0], converted.size(), sf::Triangles, &fill);
 } 
 
@@ -103,7 +103,7 @@ void chunk::generate()
 		for (int i = 0; i < polyLine.size() - 1; i+=2) //iterates through the vector and adds in new points between the original ones.
 		{
 			double randX = utils::getRand(polyLine[i]->x, polyLine[i+1]->x, random());
-			double randY = ((polyLine[i]->y + polyLine[i+1]->y)/2.0) + utils::getRand(0.0, 3.0, random())/(pow(depth, 2)); //operator precedence screws up here (hence all the parenned stuff), it's really strange
+			double randY = window->getSize().y/conv - ((polyLine[i]->y + polyLine[i+1]->y)/2.0) + utils::getRand(0.0, 3.0, random())/(pow(depth, 2)); //operator precedence screws up here (hence all the parenned stuff), it's really strange
 			p2t::Point* p = new p2t::Point(randX, randY); 
 			polyLine.insert(polyLine.begin()+i+1, p);
 			//std::cout << "Added a new point." << std::endl;
@@ -111,8 +111,8 @@ void chunk::generate()
 		//std::cout << "Layer " << depth << " added." << std::endl;
 	}
 
-	polyLine.push_back(new p2t::Point(end->x, 0.0));
-	polyLine.insert(polyLine.begin(), new p2t::Point(start->x, 0.0));
+	polyLine.push_back(new p2t::Point(end->x, window->getSize().y/conv));
+	polyLine.insert(polyLine.begin(), new p2t::Point(start->x, window->getSize().y/conv));
 	for (int i = 0; i < polyLine.size() - 1; i++)
 	{
 		lines.push_back(new line(polyLine[i], polyLine[i+1]));
@@ -125,8 +125,8 @@ void chunk::convert()
 	std::vector<sf::Vertex> v;
 	for (auto vert: triVerts)
 	{
-		sf::Vector2f pos(vert->position.x*conv, window->getSize().y - (vert->position.y*conv));
-		sf::Vector2f texCoords(vert->texCoords.x*conv, window->getSize().y - (vert->texCoords.y*conv));	
+		sf::Vector2f pos(vert->position.x*conv, (vert->position.y*conv));
+		sf::Vector2f texCoords(vert->texCoords.x*conv, (vert->texCoords.y*conv));	
 		v.push_back(*(new sf::Vertex(pos, texCoords)));
 	}	
 	converted = v;
@@ -134,9 +134,10 @@ void chunk::convert()
 	std::vector<sf::Vertex> u;
 	for (int i = 0; i < lines.size() - 1; i+=2)
 	{
-		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[0]->x*conv, /*window->getSize().y - */lines[i]->getPoints()[0]->y*conv));
-		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[1]->x*conv, /*window->getSize().y - */lines[i]->getPoints()[1]->y*conv));
+		u.push_back(sf::Vertex(sf::Vector2f(lines[i]->getPoints()[0]->x*conv, lines[i]->getPoints()[0]->y*conv)));
+		u.push_back(sf::Vertex(sf::Vector2f(lines[i]->getPoints()[1]->x*conv, lines[i]->getPoints()[1]->y*conv)));
 	}
+	convertedLines = u;
 
 }
 //I'll worry about this later...

@@ -184,9 +184,10 @@ void player::update(double time, sf::View &view) {
 		applyForce(sf::Vector2f(0, -netForce.y));
 		yvel = 0;
 	}
+	std::cout << onground << std::endl;
 	if (uphill) {
 		applyForce(sf::Vector2f(0, mass*(1/time)));
-	}
+	}//*/
 
 	//jumping
 	if (accelup && yvel == 0) {
@@ -209,7 +210,7 @@ void player::update(double time, sf::View &view) {
 	//reseting collision bools
 	onground = false; 
 	uphill = false;
-
+	
 	view.setCenter(xpos*conversion, ypos*conversion); //centering view on player
 }
 
@@ -217,14 +218,23 @@ void player::collide(std::vector<line*> *lines) {
 	line top(xpos, ypos, xpos + width, ypos);
 	line bottom(xpos, ypos + height, xpos + width, ypos + height);
 	line left(xpos, ypos, xpos, ypos + height);
-	line right(xpos + width, ypos, xpos + width, ypos + height); 
+	line right(xpos + width, ypos, xpos + width, ypos + height);
+	std::cout << "BOTTOM:" << bottom.getPoints()[0]->x << ":" << bottom.getPoints()[0]->y << " " << bottom.getPoints()[1]->x << ":" << bottom.getPoints()[1]->y << std::endl;
 	for (auto line : *lines) {
+			std::cout << line->getPoints()[0]->x << ":" << line->getPoints()[0]->y << " " << line->getPoints()[1]->x << ":" << line->getPoints()[1]->y << std::endl;
 			if (bottom.intersects(line))
+			{
+				std::cout << bottom.getIntersect(line).x << "," << bottom.getIntersect(line).y << std::endl;
 				onground = true;
+			}
 			if (right.intersects(line))
+			{
 				uphill = true;
-			if (left.intersects(line)) 
+			}
+			if (left.intersects(line))
+			{
 				uphill = true;
+			}
 	}
 }
 
