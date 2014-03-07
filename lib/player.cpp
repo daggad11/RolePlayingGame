@@ -45,7 +45,7 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->ypos = ypos;
 
 	this->speed = 5;
-	this->agility = 10;
+	this->agility = 5;
 	
 	this->xvel = 0;
 	this->yvel = 0;
@@ -64,6 +64,8 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->onground = false;
 	this->uphill = false;
 	this->moving = false;
+	this->obstructedRight = false;
+	this->obstructedLeft = false;
 	this->direction = RIGHT;
 
 	//scaling bodyparts
@@ -120,12 +122,12 @@ void player::draw() {
 	window->draw(head);
 	
 	//positioning bodyparts
-	head.setPosition(xpos*conversion+width*conversion/2, ypos*conversion);
-	rightArm.setPosition(xpos*conversion+width*conversion/2, ypos*conversion+head.getRadius()*2);
-	rightLeg.setPosition(xpos*conversion+width*conversion/2, ypos*conversion+head.getRadius()*2+torso.getSize().y);
-	torso.setPosition(xpos*conversion+width*conversion/2, ypos*conversion+head.getRadius()*2);
-	leftArm.setPosition(xpos*conversion+width*conversion/2, ypos*conversion+head.getRadius()*2);
-	leftLeg.setPosition(xpos*conversion+width*conversion/2, ypos*conversion+head.getRadius()*2+torso.getSize().y);
+	head.setPosition(xpos*conversion+width*conversion/2, window->getSize().y - (ypos*conversion));
+	rightArm.setPosition(xpos*conversion+width*conversion/2, window->getSize().y - (ypos*conversion-head.getRadius()*2));
+	rightLeg.setPosition(xpos*conversion+width*conversion/2, window->getSize().y - (ypos*conversion-head.getRadius()*2-torso.getSize().y));
+	torso.setPosition(xpos*conversion+width*conversion/2, window->getSize().y - (ypos*conversion-head.getRadius()*2));
+	leftArm.setPosition(xpos*conversion+width*conversion/2, window->getSize().y - (ypos*conversion-head.getRadius()*2));
+	leftLeg.setPosition(xpos*conversion+width*conversion/2, window->getSize().y - (ypos*conversion-head.getRadius()*2-torso.getSize().y));
 }
 
 void player::animate(double time) {
@@ -184,19 +186,30 @@ void player::update(double time, sf::View &view) {
 		applyForce(sf::Vector2f(0, -netForce.y));
 		yvel = 0;
 	}
-	std::cout << onground << std::endl;
+
+	//hill moving and obstruction
 	if (uphill) {
 		applyForce(sf::Vector2f(0, mass*(1/time)));
-	}//*/
+	}
+	if (obstructedRight && accelright) {
+		applyForce(sf::Vector2f(-netForce.x, 0));
+		xvel = -xvel;
+	}
+	if (obstructedLeft && accelleft) {
+		applyForce(sf::Vector2f(-netForce.x, 0));
+		xvel = -xvel;
+	}
+
 
 	//jumping
 	if (accelup && yvel == 0) {
 		netForce.y += agility*mass*(1/time);
 	}
 
+
 	//accelerating based off of forces
 	xvel += netForce.x/mass*time;
-	yvel -= netForce.y/mass*time;
+	yvel += netForce.y/mass*time;
 
 
 	if (abs(xvel) > .1)
@@ -210,30 +223,35 @@ void player::update(double time, sf::View &view) {
 	//reseting collision bools
 	onground = false; 
 	uphill = false;
-	
-	view.setCenter(xpos*conversion, ypos*conversion); //centering view on player
+	obstructedRight =false;
+
+	view.setCenter(xpos*conversion, window->getSize().y - (ypos*conversion)); //centering view on player
 }
 
 void player::collide(std::vector<line*> *lines) {
 	line top(xpos, ypos, xpos + width, ypos);
-	line bottom(xpos, ypos + height, xpos + width, ypos + height);
-	line left(xpos, ypos, xpos, ypos + height);
-	line right(xpos + width, ypos, xpos + width, ypos + height);
-	std::cout << "BOTTOM:" << bottom.getPoints()[0]->x << ":" << bottom.getPoints()[0]->y << " " << bottom.getPoints()[1]->x << ":" << bottom.getPoints()[1]->y << std::endl;
+	line bottom(xpos, ypos - height, xpos + width, ypos - height);
+	line left(xpos, ypos, xpos, ypos - height);
+	line right(xpos + width, ypos, xpos + width, ypos - height);
+
 	for (auto line : *lines) {
-			std::cout << line->getPoints()[0]->x << ":" << line->getPoints()[0]->y << " " << line->getPoints()[1]->x << ":" << line->getPoints()[1]->y << std::endl;
 			if (bottom.intersects(line))
 			{
-				std::cout << bottom.getIntersect(line).x << "," << bottom.getIntersect(line).y << std::endl;
 				onground = true;
 			}
 			if (right.intersects(line))
 			{
-				uphill = true;
+				if (right.getIntersect(line).y < ypos - 9.0/10.0*height)
+					uphill = true;
+				if (right.getIntersect(line).y > ypos - 9.0/10.0*height)
+					obstructedRight = true;
 			}
 			if (left.intersects(line))
 			{
-				uphill = true;
+				if (left.getIntersect(line).y < ypos - 9.0/10.0*height)
+					uphill = true;
+				if (right.getIntersect(line).y > ypos - 9.0/10.0*height)
+					obstructedLeft = true;
 			}
 	}
 }

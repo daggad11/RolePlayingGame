@@ -70,6 +70,8 @@ protected:
 	bool direction;
 	bool onground;
 	bool uphill;
+	bool obstructedRight;
+	bool obstructedLeft;
 
 	float conversion; //conversion rate from pixels to game units
 
