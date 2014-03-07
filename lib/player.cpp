@@ -188,7 +188,7 @@ void player::update(double time, sf::View &view) {
 	}
 
 	//hill moving and obstruction
-	if (uphill) {
+	if (uphill && !obstrucedRight && !obstructedLeft) {
 		applyForce(sf::Vector2f(0, mass*(1/time)));
 	}
 	if (obstructedRight && accelright) {
