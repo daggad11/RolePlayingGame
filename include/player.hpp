@@ -68,11 +68,14 @@ protected:
 
 	bool moving;
 	bool direction;
+	bool onground;
+	bool uphill;
 
 	float conversion; //conversion rate from pixels to game units
 
 	//stats
 	double speed;
+	double agility;
 };
 
 #endif

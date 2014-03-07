@@ -45,6 +45,7 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->ypos = ypos;
 
 	this->speed = 5;
+	this->agility = 10;
 	
 	this->xvel = 0;
 	this->yvel = 0;
@@ -60,6 +61,8 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->conversion = conv;
 	this->rotSpeed = 180;
 
+	this->onground = false;
+	this->uphill = false;
 	this->moving = false;
 	this->direction = RIGHT;
 
@@ -176,9 +179,24 @@ void player::update(double time, sf::View &view) {
 	if (!accelleft && xvel < 0)
 		netForce.x += speed*4*mass;
 
+	//applying normal force
+	if (onground) {
+		applyForce(sf::Vector2f(0, -netForce.y));
+		yvel = 0;
+	}
+	if (uphill) {
+		applyForce(sf::Vector2f(0, mass*(1/time)));
+	}
+
+	//jumping
+	if (accelup && yvel == 0) {
+		netForce.y += agility*mass*(1/time);
+	}
+
 	//accelerating based off of forces
 	xvel += netForce.x/mass*time;
 	yvel -= netForce.y/mass*time;
+
 
 	if (abs(xvel) > .1)
 		xpos += xvel*time;
@@ -188,6 +206,9 @@ void player::update(double time, sf::View &view) {
 	//reseting net forces
 	netForce.x = 0;
 	netForce.y = 0;
+	//reseting collision bools
+	onground = false; 
+	uphill = false;
 
 	view.setCenter(xpos*conversion, ypos*conversion); //centering view on player
 }
@@ -198,12 +219,12 @@ void player::collide(std::vector<line*> *lines) {
 	line left(xpos, ypos, xpos, ypos + height);
 	line right(xpos + width, ypos, xpos + width, ypos + height); 
 	for (auto line : *lines) {
-			if (bottom.intersects(line)) {
-				std::cout << "collide" << std::endl;
-				applyForce(sf::Vector2f(0, -netForce.y));
-				yvel = 0;
-				return;
-			}
+			if (bottom.intersects(line))
+				onground = true;
+			if (right.intersects(line))
+				uphill = true;
+			if (left.intersects(line)) 
+				uphill = true;
 	}
 }
 
