@@ -58,17 +58,28 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->width = width;
 	this->height = height;
 	
-	this->conversion = conv;
+	//animation variables
+	rightArmTarget = 0;
+	leftArmTarget = 0;
+	rightLegTarget = 0;
+	leftLegTarget = 0;
+	rightArmDir = LEFT;
+	leftArmDir = LEFT;
+	rightLegDir = LEFT;
+	leftLegDir = LEFT;
+	wasMoving = false;
 	this->rotSpeed = 180;
+	this->moving = false;
 
+	//collision variables
 	this->onground = false;
 	this->uphill = false;
-	this->moving = false;
 	this->obstructedRight = false;
 	this->obstructedLeft = false;
 	this->phasedHorizontal = false;
 	this->direction = RIGHT;
 
+	this->conversion = conv;
 	//scaling bodyparts
 	head.setRadius(height/6);
 	torso.setSize(sf::Vector2f(4*width/5, height/3));
@@ -132,6 +143,78 @@ void player::draw() {
 }
 
 void player::animate(double time) {
+	if (moving) {
+		if (!wasMoving) {
+			if (accelright) {
+				rightArmDir = LEFT;
+				leftArmDir = RIGHT;
+				rightLegDir = RIGHT;
+				leftLegDir = LEFT;
+				rightArmTarget = 60;
+				leftArmTarget = 300;
+				rightLegTarget = 300;
+				leftLegTarget = 60;
+			}
+			if (accelright) {
+				rightArmDir = RIGHT;
+				leftArmDir = LEFT;
+				rightLegDir = LEFT;
+				leftLegDir = RIGHT;
+				rightArmTarget = 300;
+				leftArmTarget = 60;
+				rightLegTarget = 60;
+				leftLegTarget = 300;
+			}
+			wasMoving = true;
+		}
+		else {
+			if (abs(rightArm.getRotation()-rightArmTarget) < 0.1) {
+				rightArmDir = !rightArmDir;
+				leftArmDir = !leftArmDir;
+				rightLegDir = !rightLegDir;
+				leftLegDir = !leftLegDir;	
+			}
+		}
+	}
+	else {
+		rightArmTarget = 0;
+		leftArmTarget = 0;
+		rightLegTarget = 0;
+		leftLegTarget = 0;
+
+		if (rightArm.getRotation() <= 180)
+			rightArmDir = RIGHT;
+		else
+			rightArmDir = LEFT;
+		if (leftArm.getRotation() <= 180)
+			leftArmDir = RIGHT;
+		else
+			leftArmDir = LEFT;
+		if (rightLeg.getRotation() <= 180)
+			rightLegDir = RIGHT;
+		else
+			rightLegDir = LEFT;
+		if (leftLeg.getRotation() <= 180)
+			leftLegDir = RIGHT;
+		else
+			leftLegDir = LEFT;
+	}
+	if (rightArmDir == RIGHT)
+		rightArm.rotate(-rotSpeed*time);
+	else
+		rightArm.rotate(rotSpeed*time);
+	if (leftArmDir == RIGHT)
+		leftArm.rotate(-rotSpeed*time);
+	else
+		leftArm.rotate(rotSpeed*time);
+	if (rightLegDir == RIGHT)
+		rightLeg.rotate(-rotSpeed*time);
+	else
+		rightLeg.rotate(rotSpeed*time);
+	if (leftLegDir == RIGHT)
+		leftLeg.rotate(-rotSpeed*time);
+	else
+		leftLeg.rotate(rotSpeed*time);
 }
 
 void player::handleEvent(sf::Event &event) {

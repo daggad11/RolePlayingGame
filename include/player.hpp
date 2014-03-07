@@ -60,13 +60,18 @@ protected:
 	sf::RectangleShape leftLeg;
 
 	//animation variables
+	bool rightArmDir;
+	bool leftArmDir;
+	bool rightLegDir;
+	bool leftLegDir;
 	double rightArmTarget;
 	double leftArmTarget;
 	double rightLegTarget;
 	double leftLegTarget;
 	double rotSpeed;
-
 	bool moving;
+	bool wasMoving;
+
 	bool direction;
 	bool onground;
 	bool uphill;
