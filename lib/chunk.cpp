@@ -134,8 +134,8 @@ void chunk::convert()
 	std::vector<sf::Vertex> u;
 	for (int i = 0; i < lines.size() - 1; i+=2)
 	{
-		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[0].x*conv, window->getSize().y - lines[i]->getPoints()[0]->y*conv));
-		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[1].x*conv, window->getSize().y - lines[i]->getPoints()[1]->y*conv));
+		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[0]->x*conv, /*window->getSize().y - */lines[i]->getPoints()[0]->y*conv));
+		u.push_back(sf::Vertex(new sf::Vector2f(lines[i]->getPoints()[1]->x*conv, /*window->getSize().y - */lines[i]->getPoints()[1]->y*conv));
 	}
 
 }
