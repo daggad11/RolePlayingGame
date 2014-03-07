@@ -66,6 +66,7 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	this->moving = false;
 	this->obstructedRight = false;
 	this->obstructedLeft = false;
+	this->phasedHorizontal = false;
 	this->direction = RIGHT;
 
 	//scaling bodyparts
@@ -182,13 +183,13 @@ void player::update(double time, sf::View &view) {
 		netForce.x += speed*4*mass;
 
 	//applying normal force
-	if (onground) {
+	if (onground && not phasedHorizontal) {
 		applyForce(sf::Vector2f(0, -netForce.y));
 		yvel = 0;
 	}
 
 	//hill moving and obstruction
-	if (uphill && !obstrucedRight && !obstructedLeft) {
+	if (uphill && !obstructedRight && !obstructedLeft) {
 		applyForce(sf::Vector2f(0, mass*(1/time)));
 	}
 	if (obstructedRight && accelright) {
@@ -200,6 +201,9 @@ void player::update(double time, sf::View &view) {
 		xvel = -xvel;
 	}
 
+	//preventing phasing through walls
+	if(phasedHorizontal)
+		xvel = -xvel;
 
 	//jumping
 	if (accelup && yvel == 0) {
@@ -223,7 +227,9 @@ void player::update(double time, sf::View &view) {
 	//reseting collision bools
 	onground = false; 
 	uphill = false;
-	obstructedRight =false;
+	obstructedRight = false;
+	obstructedLeft = false;
+	phasedHorizontal = false;
 
 	view.setCenter(xpos*conversion, window->getSize().y - (ypos*conversion)); //centering view on player
 }
@@ -237,6 +243,8 @@ void player::collide(std::vector<line*> *lines) {
 	for (auto line : *lines) {
 			if (bottom.intersects(line))
 			{
+				if (top.intersects(line))
+					phasedHorizontal = true;
 				onground = true;
 			}
 			if (right.intersects(line))

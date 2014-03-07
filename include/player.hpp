@@ -72,6 +72,7 @@ protected:
 	bool uphill;
 	bool obstructedRight;
 	bool obstructedLeft;
+	bool phasedHorizontal;
 
 	float conversion; //conversion rate from pixels to game units
 
