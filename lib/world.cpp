@@ -31,7 +31,7 @@
 #include "world.hpp"
 
 world::world(float conversion, sf::RenderWindow &window) {
-	player1.init(1, 20, 1, .5, 1.8, conversion, &window);
+	player1.init(1, 20, 150, .5, 1.8, conversion, &window);
 	chunks.push_back(new chunk(new sf::Vector2f(0.0, 7.0), new sf::Vector2f(32.0, 10.0), conversion, &window));
 	gravity = -9.8;
 }

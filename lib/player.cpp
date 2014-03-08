@@ -76,10 +76,10 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 
 	//collision variables
 	this->onground = false;
-	this->uphill = false;
 	this->obstructedRight = false;
 	this->obstructedLeft = false;
 	this->phasedHorizontal = false;
+	this->phasedVertical = false;
 	this->direction = RIGHT;
 
 	this->conversion = conv;
@@ -282,13 +282,8 @@ void player::update(double time, sf::View &view) {
 		netForce.x += speed*4*mass;
 
 	//applying normal force
-	if (onground && not phasedHorizontal) {
+	if (onground && !phasedHorizontal) {
 		applyForce(sf::Vector2f(0, -yvel*mass/time));
-	}
-
-	//hill moving and obstruction
-	if (uphill && !obstructedRight && !obstructedLeft) {;
-		applyForce(sf::Vector2f(0, 1000));
 	}
 
 	if (obstructedRight && accelright) {
@@ -300,12 +295,17 @@ void player::update(double time, sf::View &view) {
 		xvel = -xvel;
 	}
 
-	//preventing phasing through walls
+	//preventing phasing through walls && ground
 	if(phasedHorizontal)
 		xvel = -xvel;
+	if (phasedVertical) {
+		ypos += height*time*10;
+		yvel = 0;
+		netForce.y = 0;
+	}
 
 	//jumping
-	if (accelup && abs(yvel) < 0.1 && (onground || uphill)) {
+	if (accelup && abs(yvel) < 0.1 && onground) {
 		netForce.y += agility*mass*(1/time);
 	}
 
@@ -316,7 +316,7 @@ void player::update(double time, sf::View &view) {
 
 	if (abs(xvel) > .1)
 		xpos += xvel*time;
-	if (abs(yvel) > .1)
+	if (abs(yvel) > .1 && !phasedVertical)
 		ypos += yvel*time;
 
 	//reseting net forces
@@ -324,10 +324,10 @@ void player::update(double time, sf::View &view) {
 	netForce.y = 0;
 	//reseting collision bools & animation bools
 	onground = false; 
-	uphill = false;
 	obstructedRight = false;
 	obstructedLeft = false;
 	phasedHorizontal = false;
+	phasedVertical = false;
 	moving = false;
 
 	view.setCenter(xpos*conversion, window->getSize().y - (ypos*conversion)); //centering view on player
@@ -346,22 +346,23 @@ void player::collide(std::vector<line*> *lines) {
 	for (auto line : *lines) {
 			if (bottom.intersects(line))
 			{
-				if (top.intersects(line))
+				if (top.intersects(line)) 
 					phasedHorizontal = true;
 				onground = true;
 			}
 			if (right.intersects(line))
 			{
-				if (right.getIntersect(line).y < ypos - 9/10*height)
-					uphill = true;
-				if (right.getIntersect(line).y > ypos - 9/10*height)
+				if (left.intersects(line)) {
+					phasedVertical = true;
+				}
+				if (right.getIntersect(line).y > ypos - 9*height/10)
 					obstructedRight = true;
 			}
 			if (left.intersects(line))
 			{
-				if (left.getIntersect(line).y < ypos - 9/10*height)
-					uphill = true;
-				if (right.getIntersect(line).y > ypos - 9/10*height)
+				if (right.intersects(line))
+					phasedVertical = true;
+				if (left.getIntersect(line).y > ypos - 9*height/10)
 					obstructedLeft = true;
 			}
 	}

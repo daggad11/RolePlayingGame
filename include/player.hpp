@@ -78,10 +78,10 @@ protected:
 	//collision varibles
 	bool direction;
 	bool onground;
-	bool uphill;
 	bool obstructedRight;
 	bool obstructedLeft;
 	bool phasedHorizontal;
+	bool phasedVertical;
 
 	float conversion; //conversion rate from pixels to game units
 
