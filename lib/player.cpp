@@ -68,7 +68,10 @@ void player::init(double xpos, double ypos, double mass, double width, double he
 	rightLegDir = LEFT;
 	leftLegDir = LEFT;
 	wasMoving = false;
-	this->rotSpeed = 180;
+	this->rotMin = 220;
+	this->rotMax = 270;
+	this->rotSpeed = 0;
+	this->rotAccel = 100;
 	this->moving = false;
 
 	//collision variables
@@ -144,7 +147,10 @@ void player::draw() {
 
 void player::animate(double time) {
 	if (moving) {
+		if (rotSpeed < rotMax)
+			rotSpeed += rotAccel * time;
 		if (!wasMoving) {
+			rotSpeed = rotMin;
 			if (accelright) {
 				rightArmDir = LEFT;
 				leftArmDir = RIGHT;
@@ -155,7 +161,7 @@ void player::animate(double time) {
 				rightLegTarget = 300;
 				leftLegTarget = 60;
 			}
-			if (accelright) {
+			if (accelleft) {
 				rightArmDir = RIGHT;
 				leftArmDir = LEFT;
 				rightLegDir = LEFT;
@@ -173,47 +179,57 @@ void player::animate(double time) {
 				leftArmDir = !leftArmDir;
 				rightLegDir = !rightLegDir;
 				leftLegDir = !leftLegDir;	
+				rightArmTarget = 360 - rightArmTarget;
+				leftArmTarget = 360 - leftArmTarget;
+				rightLegTarget = 360 - rightLegTarget;
+				leftLegTarget = 360 - leftLegTarget;
 			}
 		}
 	}
 	else {
-		rightArmTarget = 0;
-		leftArmTarget = 0;
-		rightLegTarget = 0;
-		leftLegTarget = 0;
+		if (rotSpeed > rotMin)
+			rotSpeed -= rotAccel * time;
+		if (wasMoving) {
+			rightArmTarget = 0;
+			leftArmTarget = 0;
+			rightLegTarget = 0;
+			leftLegTarget = 0;
 
-		if (rightArm.getRotation() <= 180)
-			rightArmDir = RIGHT;
-		else
-			rightArmDir = LEFT;
-		if (leftArm.getRotation() <= 180)
-			leftArmDir = RIGHT;
-		else
-			leftArmDir = LEFT;
-		if (rightLeg.getRotation() <= 180)
-			rightLegDir = RIGHT;
-		else
-			rightLegDir = LEFT;
-		if (leftLeg.getRotation() <= 180)
-			leftLegDir = RIGHT;
-		else
-			leftLegDir = LEFT;
+			if (rightArm.getRotation() <= 180)
+				rightArmDir = RIGHT;
+			else
+				rightArmDir = LEFT;
+			if (leftArm.getRotation() <= 180)
+				leftArmDir = RIGHT;
+			else
+				leftArmDir = LEFT;
+			if (rightLeg.getRotation() <= 180)
+				rightLegDir = RIGHT;
+			else
+				rightLegDir = LEFT;
+			if (leftLeg.getRotation() <= 180)
+				leftLegDir = RIGHT;
+			else
+				leftLegDir = LEFT;
+			wasMoving = false;
+		}
 	}
-	if (rightArmDir == RIGHT)
+
+	if (rightArmDir == RIGHT && abs(rightArm.getRotation()-rightArmTarget) > 0.1)
 		rightArm.rotate(-rotSpeed*time);
-	else
+	else if (rightArmDir == LEFT && abs(rightArm.getRotation()-rightArmTarget) > 0.1)
 		rightArm.rotate(rotSpeed*time);
-	if (leftArmDir == RIGHT)
+	if (leftArmDir == RIGHT && abs(leftArm.getRotation()-leftArmTarget) > 0.1)
 		leftArm.rotate(-rotSpeed*time);
-	else
+	else if (abs(leftArm.getRotation()-leftArmTarget) > 0.1)
 		leftArm.rotate(rotSpeed*time);
-	if (rightLegDir == RIGHT)
+	if (rightLegDir == RIGHT && abs(rightLeg.getRotation()-rightLegTarget) > 0.1)
 		rightLeg.rotate(-rotSpeed*time);
-	else
+	else if (abs(rightLeg.getRotation()-rightLegTarget) > 0.1)
 		rightLeg.rotate(rotSpeed*time);
-	if (leftLegDir == RIGHT)
+	if (leftLegDir == RIGHT && abs(leftLeg.getRotation()-leftLegTarget) > 0.1)
 		leftLeg.rotate(-rotSpeed*time);
-	else
+	else if (abs(leftLeg.getRotation()-leftLegTarget) > 0.1)
 		leftLeg.rotate(rotSpeed*time);
 }
 
@@ -267,14 +283,14 @@ void player::update(double time, sf::View &view) {
 
 	//applying normal force
 	if (onground && not phasedHorizontal) {
-		applyForce(sf::Vector2f(0, -netForce.y));
-		yvel = 0;
+		applyForce(sf::Vector2f(0, -yvel*mass/time));
 	}
 
 	//hill moving and obstruction
-	if (uphill && !obstructedRight && !obstructedLeft) {
-		applyForce(sf::Vector2f(0, mass*(1/time)));
+	if (uphill && !obstructedRight && !obstructedLeft) {;
+		applyForce(sf::Vector2f(0, 1000));
 	}
+
 	if (obstructedRight && accelright) {
 		applyForce(sf::Vector2f(-netForce.x, 0));
 		xvel = -xvel;
@@ -289,10 +305,9 @@ void player::update(double time, sf::View &view) {
 		xvel = -xvel;
 
 	//jumping
-	if (accelup && yvel == 0) {
+	if (accelup && abs(yvel) < 0.1 && (onground || uphill)) {
 		netForce.y += agility*mass*(1/time);
 	}
-
 
 	//accelerating based off of forces
 	xvel += netForce.x/mass*time;
@@ -307,21 +322,26 @@ void player::update(double time, sf::View &view) {
 	//reseting net forces
 	netForce.x = 0;
 	netForce.y = 0;
-	//reseting collision bools
+	//reseting collision bools & animation bools
 	onground = false; 
 	uphill = false;
 	obstructedRight = false;
 	obstructedLeft = false;
 	phasedHorizontal = false;
+	moving = false;
 
 	view.setCenter(xpos*conversion, window->getSize().y - (ypos*conversion)); //centering view on player
 }
 
 void player::collide(std::vector<line*> *lines) {
-	line top(xpos, ypos, xpos + width, ypos);
-	line bottom(xpos, ypos - height, xpos + width, ypos - height);
-	line left(xpos, ypos, xpos, ypos - height);
-	line right(xpos + width, ypos, xpos + width, ypos - height);
+	double x1 = xpos + (width - torso.getSize().x/conversion)/2;
+	double x2 = xpos + width - (width - torso.getSize().x/conversion)/2;
+	double y1 = ypos;
+	double y2 = ypos - height;
+	line top(x1, y1, x2, y1);
+	line bottom(x1, y2, x2, y2);
+	line left(x1, y1, x1, y2);
+	line right(x2, y1, x2, y2);
 
 	for (auto line : *lines) {
 			if (bottom.intersects(line))
@@ -332,16 +352,16 @@ void player::collide(std::vector<line*> *lines) {
 			}
 			if (right.intersects(line))
 			{
-				if (right.getIntersect(line).y < ypos - 9.0/10.0*height)
+				if (right.getIntersect(line).y < ypos - 9/10*height)
 					uphill = true;
-				if (right.getIntersect(line).y > ypos - 9.0/10.0*height)
+				if (right.getIntersect(line).y > ypos - 9/10*height)
 					obstructedRight = true;
 			}
 			if (left.intersects(line))
 			{
-				if (left.getIntersect(line).y < ypos - 9.0/10.0*height)
+				if (left.getIntersect(line).y < ypos - 9/10*height)
 					uphill = true;
-				if (right.getIntersect(line).y > ypos - 9.0/10.0*height)
+				if (right.getIntersect(line).y > ypos - 9/10*height)
 					obstructedLeft = true;
 			}
 	}

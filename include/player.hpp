@@ -69,9 +69,13 @@ protected:
 	double rightLegTarget;
 	double leftLegTarget;
 	double rotSpeed;
+	double rotMax;
+	double rotMin;
+	double rotAccel;
 	bool moving;
 	bool wasMoving;
 
+	//collision varibles
 	bool direction;
 	bool onground;
 	bool uphill;
