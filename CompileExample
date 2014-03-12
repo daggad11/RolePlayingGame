@@ -1,2 +1,5 @@
-clang++ -I ~/SFML-2.1/include -I include -L ~/SFML-2.1/lib src/game.cpp lib/entity.cpp lib/player.cpp lib/world.cpp lib/chunk.cpp lib/line.cpp lib/utils.cpp lib/poly2tri/common/shapes.cc lib/poly2tri/sweep/sweep.cc lib/poly2tri/sweep/sweep_context.cc lib/poly2tri/sweep/cdt.cc lib/poly2tri/sweep/advancing_front.cc -lsfml-graphics -lsfml-system -lsfml-window -std=c++11 -o bin/game
+COMPILER=g++
+SFMLDIR=~/SFML-2.1/
+$COMPILER -I $SFMLDIR/include -I include -L $SFMLDIR/lib src/game.cpp lib/entity.cpp lib/player.cpp lib/world.cpp lib/chunk.cpp lib/line.cpp lib/utils.cpp lib/poly2tri/common/shapes.cc lib/poly2tri/sweep/sweep.cc lib/poly2tri/sweep/sweep_context.cc lib/poly2tri/sweep/cdt.cc lib/poly2tri/sweep/advancing_front.cc -lsfml-graphics -lsfml-system -lsfml-window -std=c++11 -o bin/game
+
 
