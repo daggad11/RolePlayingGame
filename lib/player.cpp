@@ -302,6 +302,7 @@ void player::update(double time, sf::View &view) {
 		ypos += height*time*10;
 		yvel = 0;
 		netForce.y = 0;
+		netForce.x = 0;
 	}
 
 	//jumping
